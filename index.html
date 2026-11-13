@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="light">
+<title>ChartPractice</title>
+<style>
+:root{color-scheme:light;--navy:#0f2f4d;--navy2:#16406a;--blue:#1663a6;--blue2:#0f4d84;--line:#c3d0dd;--line2:#dde5ec;--bg:#e8edf2;--ink:#1c2b3a;--mut:#5a6d7f;--gold:#f2b705;--red:#b3261e;--green:#0e7a3e;--purple:#5b2ea6}
+*{box-sizing:border-box}html{scroll-behavior:smooth}
+body{margin:0;font-family:"Segoe UI",system-ui,Arial,sans-serif;background:var(--bg);color:var(--ink);font-size:14px;line-height:1.45}
+header{background:linear-gradient(180deg,var(--navy2),var(--navy));color:#fff;padding:10px 16px;display:flex;flex-wrap:wrap;gap:10px;align-items:center;box-shadow:0 2px 8px rgba(15,47,77,.35);position:relative;z-index:20}
+header b{font-size:21px;letter-spacing:.2px}.chip{background:var(--gold);color:#111;padding:3px 10px;border-radius:12px;font-weight:700;font-size:11px;letter-spacing:.4px}
+header .env{margin-left:auto;font-size:12px;color:#cfe0ef;text-align:right}
+nav.ws{display:flex;gap:6px;flex-wrap:wrap;padding:8px 16px;background:#d7e0ea;border-bottom:2px solid #9fb3c8;position:sticky;top:0;z-index:15}
+button{font:inherit;color:var(--ink);-webkit-text-fill-color:currentColor}
+button,.btn{cursor:pointer;border:1px solid #7d97ad;background:#fff;color:var(--ink);padding:7px 12px;border-radius:6px;font-weight:600;transition:background .12s,border-color .12s}
+button:hover,.btn:hover{background:#eef3f8}button.on,.btn.primary{background:var(--blue);color:#fff;border-color:var(--blue)}
+.btn.primary:hover{background:var(--blue2)}.btn.warn{background:var(--red);color:#fff;border-color:var(--red)}
+.btn.aiBtn{background:var(--purple);color:#fff;border-color:var(--purple)}
+.btn.small{padding:4px 9px;font-size:12px;border-radius:5px}.btn:disabled{opacity:.45;cursor:not-allowed}
+.btn.ghost{background:transparent;border-color:transparent;color:var(--blue)}
+main{padding:14px 16px 22px;max-width:1280px;margin:auto}
+.card{background:#fff;border:1px solid var(--line);border-radius:8px;padding:14px 16px;margin-bottom:12px;box-shadow:0 1px 3px rgba(28,43,58,.07)}
+.card h2{margin:2px 0 8px;font-size:19px}.card h3{margin:2px 0 8px;font-size:16px}.card h4{margin:12px 0 6px;font-size:14px}
+table{width:100%;border-collapse:collapse;font-size:13.5px}th,td{border-bottom:1px solid var(--line2);padding:7px 8px;text-align:left;vertical-align:top}
+th{background:#eef3f8;font-size:12px;text-transform:uppercase;letter-spacing:.4px;color:#3c546c}
+tr.prow:hover{background:#f4f8fb}.scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+input,select,textarea{width:100%;padding:7px 9px;border:1px solid #9fb3c8;border-radius:5px;margin:3px 0 9px;font:inherit;background:#fff;color:var(--ink);-webkit-text-fill-color:var(--ink)}
+input:focus,select:focus,textarea:focus{outline:2px solid #9ec3e6;outline-offset:0;border-color:var(--blue)}
+textarea{min-height:96px;resize:vertical}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(225px,1fr));gap:12px}
+.grid2{display:grid;grid-template-columns:260px 1fr;gap:14px}@media(max-width:760px){.grid2{grid-template-columns:1fr}}
+.tag{display:inline-block;background:#e3eef7;border-radius:10px;padding:2px 8px;margin:2px;font-size:12px;font-weight:600}
+.hud{position:sticky;top:53px;z-index:14;background:#fff3cd;border:2px solid var(--gold);padding:9px 14px;font-weight:700;display:none;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.hud.red{background:#ffd7d7;border-color:var(--red);animation:pulse 1s infinite}@keyframes pulse{50%{opacity:.62}}
+.flagH{color:var(--red);font-weight:700}.flagL{color:var(--blue);font-weight:700}
+footer{background:var(--navy);color:#cfe0ef;padding:9px 16px;font-size:12px;display:flex;flex-wrap:wrap;gap:8px;justify-content:space-between}
+.mut{color:var(--mut);font-size:13px}.ok{color:var(--green);font-weight:700}.bad{color:var(--red);font-weight:700}
+.big{font-size:27px;font-weight:700;line-height:1.1}
+.bar{height:10px;background:#e3eaf1;border-radius:6px;overflow:hidden;margin:6px 0}.bar>i{display:block;height:100%;background:linear-gradient(90deg,var(--blue),#3f97dd)}
+.banner{background:linear-gradient(180deg,var(--navy2),var(--navy));color:#fff;border-radius:8px;padding:13px 16px;margin-bottom:10px;box-shadow:0 2px 6px rgba(15,47,77,.3)}
+.banner .lbl{font-size:11px;text-transform:uppercase;letter-spacing:.6px;color:#9fc2e2}
+.actnav{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:10px}
+.actnav button{cursor:pointer;border:1px solid #7d97ad;background:#fff;color:var(--ink);-webkit-text-fill-color:var(--ink);padding:6px 11px;border-radius:6px;font-weight:600}
+.actnav button.on{background:var(--blue);color:#fff;-webkit-text-fill-color:#fff;border-color:var(--blue)}
+.qcard{border:2px solid var(--purple);background:#faf7ff}
+.kv{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px}.kv div{background:#f4f8fb;border:1px solid var(--line2);border-radius:6px;padding:8px}
+.badge{display:inline-block;border:1px solid var(--line);border-radius:14px;padding:3px 10px;margin:2px;font-size:12px;background:#f7fafc}.badge.earned{background:#fff6d8;border-color:var(--gold);font-weight:700}
+.linkrow{display:flex;flex-wrap:wrap;gap:5px;align-items:center;margin:4px 0}
+.wssec,.actsec{scroll-margin-top:118px}
+.seclabel{font-size:12px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;color:#3c546c;margin:18px 0 6px;border-bottom:2px solid #9fb3c8;padding-bottom:4px}
+details.phrase{border-bottom:1px solid var(--line2);padding:6px 0}details.phrase summary{cursor:pointer;font-weight:700;color:var(--blue2)}
+.msg-unread{font-weight:600}.dot{color:var(--red);font-weight:900}
+@media(max-width:640px){main{padding:10px}header .env{display:none}.hud{top:96px}}
+/* ===== LIVE BEDSIDE MONITOR ===== */
+.mon{background:#04090d;color:#cfe8d8;border:2px solid #2b3f4d;border-radius:10px;padding:12px 14px;box-shadow:inset 0 0 40px rgba(0,0,0,.8)}
+.monhead{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between;border-bottom:1px solid #223544;padding-bottom:8px;margin-bottom:8px}
+.monhead b{color:#fff;font-size:16px;letter-spacing:.3px}
+.livedot{display:inline-block;width:10px;height:10px;border-radius:50%;background:#ff3b30;animation:monblink 1.2s infinite;vertical-align:middle}
+@keyframes monblink{50%{opacity:.25}}
+.mon canvas.wave{width:100%;height:248px;display:block;background:#010507;border:1px solid #1b2c38;border-radius:6px}
+.mon canvas.trend{width:100%;height:92px;display:block;background:#010507;border:1px solid #1b2c38;border-radius:6px;margin-top:8px}
+.montiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(128px,1fr));gap:8px;margin:10px 0}
+.mtile{background:#08131a;border:1px solid #223544;border-radius:8px;padding:7px 10px;min-height:86px}
+.mtile .mlab{font-size:11px;font-weight:700;letter-spacing:.6px;text-transform:uppercase}
+.mtile .mv{font-family:Consolas,"SF Mono",monospace;font-size:31px;font-weight:800;line-height:1.05}
+.mtile .mun{font-size:11px;color:#8fa8b5}
+.mtile .mlim{font-size:11px;color:#7d97a5}
+.cHR{color:#39ff6a}.cSpO2{color:#37c8ff}.cRR{color:#ffd83d}.cBP{color:#ff6055}.cTemp{color:#f2f5f7}.cEtCO2{color:#ff9f2e}
+.mtile.alarm{background:#4d0d0a;border-color:#ff3b30;animation:tileflash .8s infinite}
+@keyframes tileflash{50%{background:#2a0705}}
+.monbanner{border-radius:6px;padding:9px 12px;font-weight:700;margin:8px 0;display:none}
+.monbanner.show{display:block}
+.monbanner.crit{background:#5c0f0a;color:#fff;border:2px solid #ff3b30;animation:tileflash .8s infinite}
+.monbanner.warnb{background:#4d3b00;color:#ffe27a;border:2px solid #f2b705}
+.monbanner.okb{background:#0a2e17;color:#7de2a0;border:1px solid #1d5c33}
+.monbtns{display:flex;flex-wrap:wrap;gap:7px;margin:10px 0 2px}
+.mon .btn{background:#12232f;color:#e6f2f7;border-color:#3c5a6e}
+.mon .btn.primary{background:#1663a6;color:#fff;border-color:#1663a6}
+.mon .btn.warnb2{background:#b3261e;color:#fff;border-color:#b3261e}
+.monmeta{font-size:12.5px;color:#9fc0cf}
+.trapnote{background:#3d2b00;border:1px solid #f2b705;color:#ffe9a3;border-radius:6px;padding:8px 11px;margin-top:8px;font-size:13px}
+
+</style></head><body>
+<header><b>ChartPractice</b><span class="chip">TRAINING — FICTIONAL PATIENTS ONLY</span><span class="env">Training Environment &bull; RT Workstation<br><span id="clock"></span></span></header>
+<div class="hud" id="hud"><span id="hudTxt"></span><span><button class="btn small" id="hudQBtn" style="display:none" onclick="jumpToQuestion()">Answer end question</button> <button class="btn small warn" onclick="endRunManual()">End run</button></span></div>
+<nav class="ws" id="ws">
+<button data-w="lists" class="on">Patient Lists</button><button data-w="chart">Chart</button>
+<button data-w="inbasket">In Basket <span id="unreadBadge"></span></button><button data-w="smart">SmartTools</button>
+<button data-w="ai" class="aiBtn">✦ AI AGENT</button></nav>
+<main id="app"></main>
+<footer><span>ChartPractice • Fictional practice patients • Not real Epic software</span><span id="statusBar">Ready</span></footer>
+<script>
+"use strict";
+const LS='chartpractice_github_pages_v1';
+const $=s=>document.querySelector(s);
+const $$=s=>[...document.querySelectorAll(s)];
+function esc(s){return String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
+function nowStr(){return new Date().toLocaleString()}
+function todayLocal(){const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
+function setStatus(t){const el=$('#statusBar');if(el)el.textContent=t}
+</script>
+<script>
+const SEED_PATIENTS=[
+{id:1,name:"Maria Delgado",mrn:"P-1001",age:67,sex:"F",unit:"ICU",room:"ICU-4",dx:"Ventilated COPD exacerbation",day:4,device:"Ventilator — ETT 7.5 @ 22 cm",story:"Acute-on-chronic respiratory failure. Vent check is stale — chart a new one.",vitals:{HR:96,BP:"128/74",RR:18,SpO2:91,Temp:"37.4°C"},abg:{type:"arterial",pH:7.31,PaCO2:58,HCO3:29,PaO2:62,SaO2:90},lda:["ETT 7.5 @ 22 cm","Arterial line","Peripheral IV"]},
+{id:2,name:"James Okafor",mrn:"P-1002",age:34,sex:"M",unit:"Step-Down",room:"SD-12",dx:"Status asthmaticus, improving",day:2,device:"Nebulizers / MDI teaching",story:"Wheeze improving on scheduled nebs. Inhaler education due.",vitals:{HR:104,BP:"132/80",RR:22,SpO2:94,Temp:"36.9°C"},abg:{type:"arterial",pH:7.38,PaCO2:40,HCO3:23,PaO2:78,SaO2:95},lda:["Peripheral IV"]},
+{id:3,name:"Astrid Lindqvist",mrn:"P-1003",age:72,sex:"F",unit:"Med-Surg",room:"MS-21",dx:"Post-op Day 1 — atelectasis risk",day:1,device:"Incentive spirometry / O₂ nasal cannula",story:"Post-op, shallow breathing. Pulmonary hygiene and IS coaching.",vitals:{HR:88,BP:"118/70",RR:18,SpO2:93,Temp:"37.1°C"},abg:{type:"venous",pH:7.36,PaCO2:46,HCO3:25,PaO2:40,SaO2:72},lda:["Peripheral IV","Foley catheter"]},
+{id:4,name:"Tomas Reyes",mrn:"P-1004",age:59,sex:"M",unit:"Telemetry",room:"TEL-8",dx:"Pneumonia on high-flow nasal cannula",day:3,device:"High-flow nasal cannula 40 L/min, FiO₂ 0.50",story:"Never had a device flowsheet column charted — chart one.",vitals:{HR:102,BP:"124/76",RR:26,SpO2:92,Temp:"38.2°C"},abg:{type:"arterial",pH:7.44,PaCO2:33,HCO3:22,PaO2:68,SaO2:93},lda:["Peripheral IV"]},
+{id:5,name:"Walter Kowalski",mrn:"P-1005",age:61,sex:"M",unit:"ICU",room:"ICU-7",dx:"Severe ARDS — lung-protective ventilation",day:5,device:"Ventilator — PEEP 14, plateau 26, driving pressure 12",story:"P/F = 82 ÷ 1.00 = 82 — severe ARDS (Berlin <100).",vitals:{HR:110,BP:"108/64",RR:28,SpO2:88,Temp:"38.0°C"},abg:{type:"arterial",pH:7.29,PaCO2:51,HCO3:24,PaO2:82,SaO2:94},lda:["ETT 8.0 @ 24 cm","Central line","Arterial line","Foley catheter"]},
+{id:6,name:"Li Chen",mrn:"P-1006",age:45,sex:"F",unit:"ICU",room:"ICU-9",dx:"Carbon monoxide poisoning",day:1,device:"Non-rebreather, FiO₂ 1.00",story:"TRAP: SpO₂ reads 99% but COHb is 24% — pulse oximetry cannot separate COHb.",vitals:{HR:118,BP:"140/84",RR:24,SpO2:99,Temp:"36.8°C"},abg:{type:"arterial",pH:7.32,PaCO2:32,HCO3:16,PaO2:410,SaO2:99},lda:["Peripheral IV"]},
+{id:7,name:"Petra Novak",mrn:"P-1007",age:19,sex:"F",unit:"PICU",room:"PICU-3",dx:"Cystic fibrosis exacerbation",day:6,device:"Airway clearance / nebulizers",story:"Pseudomonas colonizer. Airway clearance + aerosolized therapy.",vitals:{HR:108,BP:"112/68",RR:24,SpO2:90,Temp:"37.8°C"},abg:{type:"venous",pH:7.35,PaCO2:48,HCO3:26,PaO2:38,SaO2:68},lda:["PICC line"]},
+{id:8,name:"Omar Haddad",mrn:"P-1008",age:52,sex:"M",unit:"Step-Down",room:"SD-5",dx:"Guillain-Barré syndrome — respiratory monitoring",day:4,device:"Serial VC / NIF — 20/30/40 rule",story:"Intubate if VC <20 mL/kg, NIF weaker than −30 cmH₂O, or MEP <40 cmH₂O.",vitals:{HR:92,BP:"130/78",RR:20,SpO2:96,Temp:"36.7°C"},abg:{type:"arterial",pH:7.40,PaCO2:40,HCO3:24,PaO2:84,SaO2:96},lda:["Peripheral IV","NG tube"]},
+{id:9,name:"Margaret Fitzgerald",mrn:"P-1009",age:78,sex:"F",unit:"Telemetry",room:"TEL-3",dx:"Cardiogenic pulmonary edema on BiPAP",day:2,device:"BiPAP 12/6, FiO₂ 0.40",story:"Never had a device flowsheet column charted — chart one.",vitals:{HR:112,BP:"168/92",RR:28,SpO2:90,Temp:"36.6°C"},abg:{type:"arterial",pH:7.30,PaCO2:48,HCO3:23,PaO2:64,SaO2:90},lda:["Peripheral IV","Foley catheter"]},
+{id:10,name:"Earl Brooks",mrn:"P-1010",age:69,sex:"M",unit:"Med-Surg",room:"MS-14",dx:"COPD — home oxygen / LTOT evaluation",day:3,device:"Nasal cannula 2 L/min",story:"LTOT qualifies at PaO₂ ≤55 mmHg (or SpO₂ ≤88%) on room air at rest.",vitals:{HR:84,BP:"126/72",RR:20,SpO2:86,Temp:"36.9°C"},abg:{type:"arterial",pH:7.37,PaCO2:52,HCO3:30,PaO2:54,SaO2:86},lda:["Peripheral IV"]},
+{id:11,name:"Dmitri Petrov",mrn:"P-1011",age:38,sex:"M",unit:"Step-Down",room:"SD-9",dx:"Traumatic pneumothorax — chest tube",day:2,device:"Chest tube to −20 cmH₂O suction",story:"NEVER clamp a chest tube for transport without an order — tension risk.",vitals:{HR:98,BP:"122/74",RR:22,SpO2:94,Temp:"37.0°C"},abg:{type:"arterial",pH:7.42,PaCO2:36,HCO3:23,PaO2:76,SaO2:95},lda:["Chest tube","Peripheral IV"]},
+{id:12,name:"Ana Silva",mrn:"P-1012",age:26,sex:"F",unit:"ED",room:"ED-6",dx:"Severe asthma on BiPAP — tiring",day:1,device:"BiPAP 10/5 + continuous neb",story:"Rising PaCO₂ in asthma = tiring, not improving. Never had a device column charted.",vitals:{HR:126,BP:"134/82",RR:32,SpO2:91,Temp:"36.8°C"},abg:{type:"arterial",pH:7.28,PaCO2:52,HCO3:24,PaO2:70,SaO2:92},lda:["Peripheral IV"]},
+{id:13,name:"Noah Andersen",mrn:"P-1013",age:0,sex:"M",unit:"NICU",room:"NICU-2",dx:"Neonatal RDS on CPAP",day:1,device:"Bubble CPAP 6 cmH₂O, FiO₂ 0.35",story:"Weight 1,680 g. Beractant 100 mg/kg = 168 mg = 6.7 mL, due 15:00.",vitals:{HR:152,BP:"62/38",RR:58,SpO2:90,Temp:"36.8°C"},abg:{type:"capillary",pH:7.30,PaCO2:50,HCO3:24,PaO2:48,SaO2:82},lda:["UVC","CPAP prongs"]}
+];
+const MAR_SEED=[["Albuterol neb 2.5 mg/3 mL","13:00",1],["Ipratropium neb 0.5 mg/2.5 mL","13:00",6],["Budesonide neb 0.5 mg/2 mL","14:00",1],["Albuterol neb 2.5 mg/3 mL","13:00",12],["Beractant 168 mg (6.7 mL) intratracheal","15:00",13],["Methylprednisolone IV 40 mg","14:00",7],["Furosemide IV 40 mg","13:00",9],["Albuterol MDI 2 puffs","16:00",2],["Furosemide IV 40 mg","14:00",5]];
+const INB_SEED=[["Results","Kowalski ABG resulted — please review",0],["Orders","New BiPAP order — Fitzgerald",0],["Cosign","Delgado vent note needs cosign",0],["Patient Calls","Brooks asks about home O₂",0],["Staff","Charge RT: NICU beractant at 15:00",0],["Results","Chen co-oximetry resulted",0],["Orders","Haddad serial VC/NIF q4h",0],["Staff","Handoff at 19:00",0],["Patient Calls","Novak airway clearance question",0],["Results","Petrov chest X-ray resulted",1],["Orders","Silva continuous neb order",1],["Staff","Welcome to ChartPractice training",1],["Results","Delgado ABG resulted",1]];
+</script>
+<script>
+const PHRASES={
+".ventcheck":"Vent check: mode ***, VT ***, RR ***, PEEP ***, FiO2 ***, plateau ***, SpO2 ***. ETT secured, breath sounds ***.",
+".sbt":"SBT: patient tolerated *** minutes on PS ***, RSBI ***, cough/gag present, secretions ***.",
+".soaprt":"S: *** O: SpO2 ***, breath sounds *** A: *** P: continue ***, recheck ***.",
+".nebtx":"Neb treatment: albuterol 2.5 mg/3 mL given, pre HR ***, post HR ***, breath sounds ***, tolerated well.",
+".trachcare":"Trach care done: inner cannula cleaned, ties secure two fingers, site ***.",
+".inhalered":"Inhaler education: MDI + spacer demonstrated, teach-back completed, patient able to ***.",
+".abg":"ABG drawn from *** site on FiO2 ***, sample on ice, sent to lab. Results pending; will recheck SpO2 and work of breathing.",
+".o2check":"Oxygen check: device ***, flow/FiO2 ***, SpO2 ***% (target ***), tubing patent, skin at ears/nares intact.",
+".wean":"Weaning screen: RSBI ***, cough ***, secretions ***, mentation ***. Plan: ***.",
+".handoff":"SBAR handoff: S *** B *** A *** R ***. Pending: ***.",
+".bipap":"BiPAP check: IPAP/EPAP ***, FiO2 ***, leak ***, SpO2 ***, mask fit ***, patient synchrony ***.",
+".cpap":"CPAP check: pressure ***, FiO2 ***, SpO2 ***, seal ***, skin check ***, tolerated ***.",
+".suction":"Suctioning: sterile technique, secretions *** amount/color, pre/post SpO2 ***, breath sounds ***.",
+".is":"Incentive spirometry: volume *** mL x *** reps, coached slow deep breaths with breath hold, cough supported. Goal *** mL.",
+".extub":"Post-extubation check: voice ***, stridor ***, SpO2 ***, breath sounds ***, secretions managed ***.",
+".prone":"Prone positioning assist: lines/airway secured before turn, ETT depth confirmed ***, skin/eyes checked, SpO2 after turn ***.",
+".admitrt":"RT admission assessment: breath sounds ***, SpO2 *** on ***, work of breathing ***, history ***, plan ***."
+};
+const SMARTLINKS=[
+{name:"Breath sounds",key:"@BREATH@",options:["clear bilaterally","diminished bilaterally","wheezes bilaterally","crackles at bases","coarse / rhonchi"]},
+{name:"Work of breathing",key:"@WOB@",options:["comfortable, no accessory muscle use","mild accessory muscle use","moderate distress, tripod","severe distress, tiring"]},
+{name:"Secretions",key:"@SEC@",options:["scant, thin","moderate, thick","copious, purulent","blood-tinged"]},
+{name:"SpO2 target",key:"@TARGET@",options:["88–92% (COPD / CO2 retainer)","92–96% (general)","≥90% per orders"]},
+{name:"Patient response",key:"@RESP@",options:["tolerated well, improved","tolerated, no change","did not tolerate — stopped, provider notified"]},
+{name:"Device check",key:"@DEVCHK@",options:["device patent, settings verified, alarms on","settings verified, alarm limits checked","leak present — refit done"]},
+{name:"Education",key:"@EDU@",options:["teach-back completed correctly","teach-back partial — re-teach next visit","family present for teaching"]}
+];
+const CPTS=[["94002","Vent management, initial day"],["94003","Vent management, subsequent day"],["94640","Nebulizer therapy"],["94660","CPAP / BiPAP therapy"],["94664","Inhaler education / demonstration"],["94760","Pulse oximetry, single determination"]];
+const PANELS={"ABG (arterial)":["pH","PaCO2","HCO3","PaO2"],"VBG (venous)":["pH","PvCO2","HCO3","PvO2"],"CBC":["WBC","Hgb","Hct","Plt"],"BMP":["Na","K","Glucose","Creatinine"],"Co-oximetry":["COHb","MetHb","O2Hb"]};
+const DRILL_NAMES=["Vent check","SBT screen","Neb treatment","ABG draw","Trach care","Inhaler teach-back","Chart audit","Handoff SBAR","O₂ setup","Code response"];
+const ORDER_TEXTS=["Vent check q4h","Neb treatment q4h","O₂ titrate to SpO₂ 88–92%","ABG in AM"];
+function seed(){return{patients:JSON.parse(JSON.stringify(SEED_PATIENTS)),flows:[],mar:MAR_SEED.map((m,i)=>({id:i+1,med:m[0],time:m[1],pid:m[2],status:"Due"})),notes:[{id:1,pid:1,title:"RT Vent Note",body:"Ventilator check completed. Settings verified, alarms on.",status:"Signed"}],orders:SEED_PATIENTS.map((p,i)=>({id:i+1,pid:p.id,text:ORDER_TEXTS[i%4],cat:"Respiratory Care",status:"Active"})),results:[],inb:INB_SEED.map((m,i)=>({id:i+1,folder:m[0],subject:m[1],read:!!m[2]})),charges:[],runs:[],drills:[],extraPhrases:{},ldaRemoved:{}}}
+function migrate(s){if(!s||!Array.isArray(s.patients)||!s.patients.length)return seed();const d=seed();for(const k of Object.keys(d))if(s[k]===undefined)s[k]=d[k];s.orders.forEach(o=>{if(!o.cat)o.cat="Respiratory Care"});if(!s.mar.some(m=>m.pid===5))s.mar.push({id:Math.max(0,...s.mar.map(m=>m.id||0))+1,med:"Furosemide IV 40 mg",time:"14:00",pid:5,status:"Due"});s.patients.forEach(p=>{if(!Array.isArray(p.lda))p.lda=[];if(!p.vitals)p.vitals={}});return s}
+let S;try{S=migrate(JSON.parse(localStorage.getItem(LS)||localStorage.getItem('github_pages_v1')))}catch(e){S=seed()}
+if(!S.patients||S.patients.length<13){const keep={runs:S.runs,drills:S.drills,extraPhrases:S.extraPhrases};S=seed();S.runs=keep.runs||[];S.drills=keep.drills||[];S.extraPhrases=keep.extraPhrases||{}}
+let cur=1,ws='lists',act='summary',listFilter='';
+let editNoteId=null,drill={name:DRILL_NAMES[0],sec:0,run:false,iv:null},CH=null;
+function save(){try{localStorage.setItem(LS,JSON.stringify(S))}catch(e){setStatus('Save failed — storage full or blocked in this browser')}}
+function P(){return S.patients.find(p=>p.id===cur)||S.patients[0]}
+function unread(){return S.inb.filter(m=>!m.read).length}
+function allPhrases(){return Object.assign({},PHRASES,S.extraPhrases||{})}
+function fillTokens(t){const p=P();return t.replace(/@NAME@/g,p.name).replace(/@MRN@/g,p.mrn).replace(/@AGE@/g,String(p.age)).replace(/@UNIT@/g,p.unit).replace(/@ROOM@/g,p.room).replace(/@DX@/g,p.dx).replace(/@DEVICE@/g,p.device)}
+function totalPts(){return S.runs.reduce((a,r)=>a+(r.pts||0),0)}
+function medal(pts,max){if(max<=0)return'Complete';const r=pts/max;return r>=.85?'🥇 Gold':r>=.6?'🥈 Silver':r>=.35?'🥉 Bronze':'Complete'}
+const LEVELS=[["RRT Student",0],["Clinician",500],["Senior RT",1200],["Preceptor",2200],["NBRC Ready",3500]];
+function level(pts){let c=LEVELS[0],n=null;for(let i=0;i<LEVELS.length;i++){if(pts>=LEVELS[i][1]){c=LEVELS[i];n=LEVELS[i+1]||null}}return{cur:c,nxt:n,pct:n?Math.min(100,Math.round((pts-c[1])/(n[1]-c[1])*100)):100}}
+function rangesFor(type){if(type==='arterial')return{pH:[7.35,7.45],PaCO2:[35,45],HCO3:[22,26],PaO2:[80,100],label:'arterial'};if(type==='capillary')return{pH:[7.32,7.42],PaCO2:[35,50],HCO3:[22,26],PaO2:[40,60],label:'capillary'};return{pH:[7.32,7.43],PaCO2:[41,51],HCO3:[22,26],PaO2:[30,50],label:'venous'}}
+function abgRead(a){const r=rangesFor(a.type);const keys=[['pH',a.pH],['PaCO2',a.PaCO2],['HCO3',a.HCO3],['PaO2',a.PaO2]];const out=[];for(const[k,v]of keys){if(v==null||isNaN(v))continue;if(v<r[k][0])out.push(k+' <span class="flagL">L</span>');else if(v>r[k][1])out.push(k+' <span class="flagH">H</span>')}const interp=a.pH<7.35?'Respiratory acidosis pattern':a.pH>7.45?'Alkalosis pattern':'pH in range';return(out.join(', ')||'All values in range')+' — '+interp+' ('+r.label+' reference ranges)'}
+setInterval(()=>{const c=$('#clock');if(c)c.textContent=new Date().toLocaleString()},1000);
+</script>
+<script>
+const CHALLENGES=[
+{pid:5,name:"Kowalski — Severe ARDS",mins:5,tasks:["flow","mar","note","order","charge"],q:"Kowalski: PaO₂ 82 on FiO₂ 1.00. P/F ratio and Berlin class?",opts:["82 — Severe","164 — Moderate","82 — Mild","410 — No ARDS"],ans:0,pearl:"P/F = PaO₂ ÷ FiO₂ = 82. Berlin: <100 severe, 100–200 moderate, 200–300 mild."},
+{pid:1,name:"Delgado — Vented COPD",mins:5,tasks:["flow","note","mar"],q:"Delgado ABG pH 7.31 / PaCO₂ 58 / HCO₃ 29 is best read as?",opts:["Acute-on-chronic respiratory acidosis","Pure metabolic alkalosis","Normal gas","Acute respiratory alkalosis"],ans:0,pearl:"High PaCO₂ + low pH with raised HCO₃ = acute-on-chronic respiratory acidosis."},
+{pid:13,name:"Andersen — Neonatal RDS",mins:4,tasks:["flow","mar","charge"],q:"Beractant for a 1,680 g infant at 100 mg/kg?",opts:["168 mg (6.7 mL)","16.8 mg","4 mg/kg = 6.7 mg","100 mg flat"],ans:0,pearl:"1.68 kg × 100 mg/kg = 168 mg. Beractant is 25 mg/mL → 6.7 mL."},
+{pid:8,name:"Haddad — Guillain-Barré 20/30/40",mins:4,tasks:["flow","note"],q:"The 20/30/40 rule flags intubation risk when:",opts:["VC <20 mL/kg, NIF weaker than −30, MEP <40","VC >20, NIF −60, MEP 80","Only SpO₂ <90%","PaCO₂ is normal"],ans:0,pearl:"20/30/40: VC <20 mL/kg, NIF >−30 (weaker), MEP <40 cmH₂O."},
+{pid:10,name:"Brooks — LTOT Evaluation",mins:4,tasks:["flow","result"],q:"LTOT qualifies (room air, rest) at:",opts:["PaO₂ ≤55 mmHg or SpO₂ ≤88%","PaO₂ ≤70","Any COPD diagnosis","SpO₂ ≤95%"],ans:0,pearl:"LTOT: PaO₂ ≤55 or SpO₂ ≤88%; 56–59 with cor pulmonale/edema/polycythemia."},
+{pid:6,name:"Chen — CO Poisoning",mins:4,tasks:["flow","result","note"],q:"SpO₂ 99% with COHb 24% — why is the oximeter misleading?",opts:["It reads COHb as oxyhemoglobin — get co-oximetry","The probe is broken","CO lowers PaO₂ to 24","It is always accurate"],ans:0,pearl:"Standard pulse oximetry cannot distinguish COHb from O₂Hb. Confirm with co-oximetry; treat with 100% O₂."},
+{pid:11,name:"Petrov — Chest Tube",mins:4,tasks:["flow","order"],q:"Chest tube rule for transport:",opts:["Never clamp without an order","Always clamp","Clamp if no bubbling","Remove the tube"],ans:0,pearl:"Clamping can cause tension pneumothorax. Keep below chest level, never clamp routinely."},
+{pid:12,name:"Silva — Severe Asthma",mins:5,tasks:["flow","mar","note"],q:"Rising PaCO₂ in severe asthma usually means:",opts:["Patient is tiring — ominous","Patient is improving","Neb is working","Normal finding"],ans:0,pearl:"A 'normalizing' or rising PaCO₂ in severe asthma signals fatigue and impending failure."},
+{pid:4,name:"Reyes — High-Flow Pneumonia",mins:4,tasks:["flow","result"],q:"RSBI = RR ÷ VT(L). RR 30, VT 0.30 L gives:",opts:["100 — borderline","30 — ready","300 — ready","10 — ready"],ans:0,pearl:"RSBI <105 predicts weaning success; ≥105 predicts failure. 30 ÷ 0.30 = 100."},
+{pid:9,name:"Fitzgerald — BiPAP Edema",mins:5,tasks:["flow","mar","order"],q:"First-line support for cardiogenic pulmonary edema with hypoxemia?",opts:["CPAP/BiPAP + nitrates/diuresis per orders","Intubate immediately in all cases","Stop all O₂","Chest tube"],ans:0,pearl:"NIV reduces work of breathing and preload/afterload in cardiogenic edema."}
+];
+const TASKLABEL={flow:"Chart a flowsheet column for this patient",mar:"Give a due MAR medication for this patient",note:"Create & sign a note for this patient",order:"Complete an active order for this patient",charge:"Capture a charge (94003 vent / 94640 neb) for this patient",result:"File a result for this patient"};
+function scrollToId(id){const el=$('#'+id);if(el&&el.scrollIntoView)el.scrollIntoView({behavior:'smooth',block:'start'})}
+function jumpAct(a){act=a;$$('.actnav button').forEach((x,i)=>x.classList.toggle('on',ACTS[i]&&ACTS[i][0]===a));scrollToId('actsec-'+a)}
+function setWs(w){ws=w;$$('#ws button').forEach(x=>x.classList.toggle('on',x.dataset.w===w));render();scrollToId('ws-'+w)}
+$$('#ws button').forEach(b=>b.addEventListener('click',()=>setWs(b.dataset.w)));
+function openPt(id,activity){cur=id;if(activity)act=activity;else act='summary';ws='chart';$$('#ws button').forEach(x=>x.classList.toggle('on',x.dataset.w==='chart'));render();scrollToId('actsec-'+act)}
+function jumpTo(pid,activity){openPt(pid,activity);setStatus('Opened chart — '+(S.patients.find(p=>p.id===pid)||{}).name)}
+function questionReady(){return CH&&!CH.qDone&&CH.tasks.every(t=>CH.done[t])}
+function render(){$('#unreadBadge').textContent=unread()?' ('+unread()+' unread)':'';let h='';if(CH&&questionReady())h+=questionCard();h+='<section class="wssec" id="ws-lists"><div class="seclabel">Patient Lists</div>'+viewLists()+'</section>';h+='<section class="wssec" id="ws-chart"><div class="seclabel">Chart \u2014 open patient</div>'+viewChart()+'</section>';h+='<section class="wssec" id="ws-inbasket"><div class="seclabel">In Basket</div>'+viewInb()+'</section>';h+='<section class="wssec" id="ws-smart"><div class="seclabel">SmartTools</div>'+viewSmart()+'</section>';h+='<section class="wssec" id="ws-ai"><div class="seclabel">\u2726 AI Agent</div>'+viewAI()+'</section>';$('#app').innerHTML=h;ACTS.forEach(a=>{const b=$('#actBody-'+a[0]);if(b){const prev=act;act=a[0];fillAct(b);act=prev}});panelFields();updateHud()}
+function badges(){const given=S.mar.filter(m=>m.status==='Given').length;const signed=S.notes.filter(n=>n.status==='Signed').length;const distinct=new Set(S.runs.filter(r=>r.completed).map(r=>r.name)).size;return[['🏅 First 500',totalPts()>=500],['🥇 Gold Run',S.runs.some(r=>(r.medal||'').includes('Gold'))],['✍️ Signer — 3 signed notes',signed>=3],['📊 Flowsheet Pro — 10 columns',S.flows.length>=10],['💊 MAR Pro — 5 meds given',given>=5],['📥 In Basket Zero',S.inb.length>0&&unread()===0],['🏆 Challenge Champ — 5 challenges',distinct>=5]]}
+function viewLists(){const tp=totalPts(),lv=level(tp);const units=[...new Set(S.patients.map(p=>p.unit))];const done=new Set(S.runs.filter(r=>r.completed).map(r=>r.name)).size;
+let h=timerCard()+`<div class="card"><h2>Patient Lists</h2><p class="mut">Census grouped by unit — ${S.patients.length} fictional NBRC-style patients. Progress saves on this device only.</p><div class="kv"><div><span class="mut">Level</span><br><b>${lv.cur[0]}</b><br>${tp} pts<div class="bar"><i style="width:${lv.pct}%"></i></div><span class="mut">${lv.nxt?lv.pct+'% to '+lv.nxt[0]:'Top level reached'}</span></div><div><span class="mut">Challenges completed</span><br><span class="big">${done}/10</span></div><div><span class="mut">In Basket unread</span><br><span class="big">${unread()}</span></div><div><span class="mut">Due MAR (all patients)</span><br><span class="big">${S.mar.filter(m=>m.status==='Due').length}</span></div></div><p>${badges().map(b=>`<span class="badge${b[1]?' earned':''}">${b[1]?'':'🔒 '}${b[0]}</span>`).join('')}</p><label>Filter census</label><input id="censusFilter" placeholder="Search name, diagnosis, unit or room…" value="${esc(listFilter)}" oninput="listFilter=this.value;renderListsOnly()"><span id="censusWrap">`;
+h+=censusHtml(units)+`</span><p><button class="btn" onclick="admit()">+ Admit new patient</button> <button class="btn" onclick="if(confirm('Reset to fresh seed charts? Your runs and drills reset too.')){S=seed();save();cur=1;render()}">Reset to seed</button></p></div>`;
+h+=`<div class="card"><h3>🏆 Challenge Board — Timed NBRC Challenges</h3>`;CHALLENGES.forEach((c,i)=>{const best=S.runs.filter(r=>r.name===c.name).sort((a,b)=>b.pts-a.pts)[0];h+=`<p><b>${esc(c.name)}</b> — ${c.mins} min, ${c.tasks.length} charting steps + end question ${best?`• Best: ${best.pts} pts ${esc(best.medal)}`:''} <button class="btn small primary" onclick="startChallenge(${i})">Start</button></p>`});
+h+=`<h4>Run history</h4>${S.runs.length?S.runs.slice().reverse().slice(0,12).map(r=>`<p>${esc(r.name)} — ${r.pts} pts ${esc(r.medal||'')} ${r.completed?'<span class="ok">completed</span>':'<span class="mut">ended early</span>'} <span class="mut">${esc(r.when)}</span></p>`).join(''):'<p class="mut">No runs yet.</p>'}</div>`;return h}
+function censusHtml(units){let h='';const f=listFilter.trim().toLowerCase();units.forEach(u=>{const rows=S.patients.filter(p=>p.unit===u&&(!f||(p.name+' '+p.dx+' '+p.unit+' '+p.room).toLowerCase().includes(f)));if(!rows.length)return;h+=`<h4>${esc(u)} — ${rows.length} patient(s)</h4><div class="scroll"><table><tr><th>Patient</th><th>Room</th><th>Diagnosis</th><th>Device</th><th>Hospital day</th><th></th></tr>`;rows.forEach(p=>{h+=`<tr class="prow"><td><b>${esc(p.name)}</b><br><span class="mut">${esc(p.mrn)} • ${p.age===0?'Newborn':p.age+' y/o'} ${esc(p.sex)}</span></td><td>${esc(p.room)}</td><td>${esc(p.dx)}</td><td>${esc(p.device)}</td><td>Day ${p.day}</td><td><button class="btn small primary" onclick="openPt(${p.id})">Open chart</button></td></tr>`});h+=`</table></div>`});return h||'<p class="mut">No patients match that filter.</p>'}
+function renderListsOnly(){const w=$('#censusWrap');if(w)w.innerHTML=censusHtml([...new Set(S.patients.map(p=>p.unit))])}
+function admit(){const name=prompt('Patient name (fictional)');if(!name||!name.trim())return;const id=Math.max(0,...S.patients.map(p=>p.id))+1;S.patients.push({id,name:name.trim(),mrn:'P-'+(1000+id),age:50,sex:'—',unit:'Med-Surg',room:'MS-NEW',dx:'New admission — RT evaluation (admitted '+todayLocal()+')',day:1,device:'To be assessed',story:'Newly admitted practice patient.',vitals:{HR:'—',BP:'—',RR:'—',SpO2:'—',Temp:'—'},abg:{type:'arterial',pH:7.40,PaCO2:40,HCO3:24,PaO2:80,SaO2:96},lda:[]});S.orders.push({id:Math.max(0,...S.orders.map(o=>o.id))+1,pid:id,text:'RT evaluation and treat',cat:'Respiratory Care',status:'Active'});save();render();setStatus('Admitted '+name.trim()+' ('+'P-'+(1000+id)+') on '+todayLocal())}
+</script>
+<script>
+function drillStats(name){const d=S.drills.filter(x=>x.name===name);if(!d.length)return null;const secs=d.map(x=>x.sec);return{count:d.length,best:Math.min(...secs),last:d[d.length-1].sec,avg:Math.round(secs.reduce((a,b)=>a+b,0)/d.length)}}
+function fmtSec(s){return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0')}
+function timerCard(){const st=drillStats(drill.name);return `<div class="card" id="trainerTimer" style="border:2px solid var(--blue)"><h3>⏱ Training Timer — Drills</h3><p class="mut">Ten drills. Pause and resume keep your elapsed time; Finish &amp; save records the run. Best / average / last are kept per drill.</p><label>Drill</label><select id="drillName" onchange="drill.name=this.value;drill.sec=0;drill.run=false;clearInterval(drill.iv);render()">${DRILL_NAMES.map(n=>`<option${n===drill.name?' selected':''}>${esc(n)}</option>`).join('')}</select><p id="drillDisp" style="font-size:24px;font-weight:700;margin:4px 0">${fmtSec(drill.sec)} ${drill.run?'<span class="ok">● timing</span>':'<span class="mut">paused / not started</span>'}</p><button class="btn primary" onclick="drillToggle()">${drill.run?'Pause':'Start / Resume'}</button> <button class="btn" onclick="drillFinish()">Finish &amp; save</button> <button class="btn ghost" onclick="drill.sec=0;drill.run=false;clearInterval(drill.iv);render()">Reset</button>${st?`<p><b>${esc(drill.name)} history:</b> best ${fmtSec(st.best)} • avg ${fmtSec(st.avg)} • last ${fmtSec(st.last)} • ${st.count} run(s)</p>`:'<p class="mut">No saved runs for this drill yet.</p>'}<p class="mut">${S.drills.slice().reverse().slice(0,6).map(d=>`${esc(d.name)}: ${fmtSec(d.sec)} — ${esc(d.when)}`).join('<br>')}</p></div>`}
+function drillToggle(){if(drill.run){drill.run=false;clearInterval(drill.iv)}else{drill.run=true;clearInterval(drill.iv);drill.iv=setInterval(()=>{drill.sec++;const d=$('#drillDisp');if(d)d.innerHTML=fmtSec(drill.sec)+' <span class="ok">● timing</span>'},1000)}render()}
+function drillStartNamed(name){drill.name=name;ws='lists';$$('#ws button').forEach(x=>x.classList.toggle('on',x.dataset.w==='lists'));render();if(!drill.run)drillToggle();setStatus('Timing: '+name);scrollToId('trainerTimer')}
+function drillFinish(){clearInterval(drill.iv);const was=drill.run;drill.run=false;if(drill.sec>0){S.drills.push({name:($('#drillName')?$('#drillName').value:drill.name),sec:drill.sec,when:nowStr()});drill.sec=0;save();setStatus('Drill saved')}render()}
+const ACTS=[["summary","Summary"],["monitor","Live Monitor"],["story","Storyboard"],["flow","Flowsheets"],["mar","MAR"],["orders","Orders"],["notes","Notes"],["results","Results"],["lda","LDA"],["charges","Charges"]];
+function dueMar(pid){return S.mar.filter(m=>m.pid===pid&&m.status==='Due')}
+function viewChart(){const p=P();let h=`<div class="banner"><span class="lbl">Patient banner</span><br><b style="font-size:19px">${esc(p.name)}</b> &nbsp; ${esc(p.mrn)} • ${p.age===0?'Newborn':p.age+' y/o'} ${esc(p.sex)} • ${esc(p.unit)} • ${esc(p.room)} • Hospital day ${p.day}<br>${esc(p.dx)} — ${esc(p.device)}<br><button class="btn small aiBtn" style="margin-top:7px" onclick="setWs('ai')">✦ Ask the AI Agent about this patient</button></div><div class="actnav">`;ACTS.forEach(a=>h+=`<button class="${act===a[0]?'on':''}" onclick="jumpAct('${a[0]}')">${a[1]}</button>`);h+=`</div>`;ACTS.forEach(a=>{h+=`<section class="actsec" id="actsec-${a[0]}"><div class="seclabel">${a[1]}</div><div id="actBody-${a[0]}"></div></section>`});return h}
+function timeThisBtn(drillName){return `<button class="btn small" onclick="drillStartNamed('${drillName}')">⏱ Time this: ${drillName}</button>`}
+function fillAct(b){const p=P();let h='';
+if(act==='summary'){const pend=S.patients.filter(x=>/ventilator/i.test(x.device)&&!S.charges.some(c=>c.pid===x.id&&c.code==='94003')).length+S.patients.filter(x=>/neb/i.test(x.device)&&!S.charges.some(c=>c.pid===x.id&&c.code==='94640')).length;h=`<div class="grid"><div class="card"><h3>Due meds</h3><p class="big">${dueMar(cur).length}</p>${dueMar(cur).map(m=>esc(m.med)+' @ '+esc(m.time)).join('<br>')||'<span class="mut">Nothing due</span>'}</div><div class="card"><h3>Active orders</h3><p class="big">${S.orders.filter(o=>o.pid===cur&&o.status==='Active').length}</p><span class="mut">of ${S.orders.filter(o=>o.pid===cur).length} total for this patient</span></div><div class="card"><h3>Results</h3><p class="big">${S.results.filter(r=>r.pid===cur).length+1}</p><span class="mut">Seed gas on file + filed results</span></div><div class="card"><h3>Unsigned drafts</h3><p class="big">${S.notes.filter(n=>n.pid===cur&&n.status==='Draft').length}</p><span class="mut">Signed notes: ${S.notes.filter(n=>n.pid===cur&&n.status==='Signed').length}</span></div></div><div class="card"><h3>Storyboard snapshot</h3><p>${esc(p.story)}</p><p><b>Vitals:</b> HR ${esc(p.vitals.HR)} • BP ${esc(p.vitals.BP)} • RR ${esc(p.vitals.RR)} • SpO₂ ${esc(p.vitals.SpO2)}% • Temp ${esc(p.vitals.Temp)}</p><p><b>Device:</b> ${esc(p.device)}</p><p>${timeThisBtn('Vent check')} ${timeThisBtn('Chart audit')}</p></div><div class="card" style="border:2px solid var(--purple)"><h3>✦ AI Agent — this patient</h3><p class="mut">Get a briefing on how to proceed with ${esc(p.name.split(' ')[0])}'s chart and care.</p><button class="btn aiBtn" onclick="setWs('ai')">Ask the AI Agent</button></div>`}
+if(act==='monitor'){h=monitorHtml(p)}
+if(act==='story'){h=`<div class="card"><h3>Storyboard — ${esc(p.name)}</h3><p>${esc(p.story)}</p><div class="kv"><div><span class="mut">Heart rate</span><br><b>${esc(p.vitals.HR)}</b></div><div><span class="mut">Blood pressure</span><br><b>${esc(p.vitals.BP)}</b></div><div><span class="mut">Resp rate</span><br><b>${esc(p.vitals.RR)}</b></div><div><span class="mut">SpO₂</span><br><b>${esc(p.vitals.SpO2)}%</b></div><div><span class="mut">Temp</span><br><b>${esc(p.vitals.Temp)}</b></div><div><span class="mut">Device</span><br><b>${esc(p.device)}</b></div></div><p><b>Gas quick read:</b> ${abgRead(p.abg)}</p><h4>Update vitals snapshot</h4><div class="grid"><span><label>HR</label><input id="vHR" value="${esc(p.vitals.HR)}"></span><span><label>BP</label><input id="vBP" value="${esc(p.vitals.BP)}"></span><span><label>RR</label><input id="vRR" value="${esc(p.vitals.RR)}"></span><span><label>SpO₂ %</label><input id="vSpO2" value="${esc(p.vitals.SpO2)}"></span><span><label>Temp</label><input id="vTemp" value="${esc(p.vitals.Temp)}"></span></div><button class="btn primary" onclick="saveVitals()">Save vitals</button> <span class="mut">Saving refreshes this snapshot immediately — no stale edits.</span></div>`}
+if(act==='flow'){const rows=S.flows.filter(f=>f.pid===cur);const groups=["Ventilator","Vital Signs","Respiratory Assessment","Oxygen Therapy","Pulmonary Hygiene"];const latest={};rows.forEach(f=>latest[f.group]=f);h=`<div class="grid2"><div class="card"><h3>Flowsheet groups</h3>${groups.map(g=>`<p><b>${g}</b><br>${latest[g]?`<span class="mut">Latest:</span> ${esc(latest[g].val)}<br><span class="mut">${esc(latest[g].when)}</span>`:'<span class="mut">No column yet</span>'}</p>`).join('')}</div><div class="card"><h3>Flowsheets — file a column</h3><label>Group</label><select id="fGroup">${groups.map(g=>`<option>${g}</option>`).join('')}</select><label>Key value (e.g. PEEP 14, SpO₂ 91, VT 420)</label><input id="fVal" placeholder="Enter a value — blank filing is blocked"><button class="btn primary" onclick="fileFlow()">File column</button> ${timeThisBtn('Vent check')}<h4>Charted columns (newest first)</h4>${rows.slice().reverse().map(f=>`<p>${esc(f.when)} — <b>${esc(f.group)}</b>: ${esc(f.val)} <button class="btn small" onclick="delFlow(${f.id})">Delete</button></p>`).join('')||'<p class="mut">No columns charted yet for this patient.</p>'}</div></div>`}
+if(act==='mar'){const times=[...new Set(S.mar.filter(m=>m.pid===cur).map(m=>m.time))].sort();h=`<div class="card"><h3>MAR — Time-column worklist</h3>${times.map(t=>`<h4>🕐 ${esc(t)}</h4>`+S.mar.filter(m=>m.pid===cur&&m.time===t).map(m=>`<p><b>${esc(m.med)}</b> — ${m.status==='Due'?'<span class="bad">Due</span>':'<span class="ok">Given</span>'} ${m.status==='Due'?`<button class="btn small primary" onclick="giveMar(${m.id})">Mark Given</button>`:`<button class="btn small" onclick="resetMar(${m.id})">Reset to Due</button>`}</p>`).join('')).join('')||'<p class="mut">No MAR tasks for this patient.</p>'}<p>${timeThisBtn('Neb treatment')}</p></div>`}
+if(act==='orders'){const cats=[...new Set(S.orders.filter(o=>o.pid===cur).map(o=>o.cat))];h=`<div class="card"><h3>Orders — grouped by category</h3>${cats.map(c=>`<h4>${esc(c)}</h4>`+S.orders.filter(o=>o.pid===cur&&o.cat===c).map(o=>`<p>${esc(o.text)} — <b>${esc(o.status)}</b> ${o.status==='Active'?`<button class="btn small primary" onclick="completeOrder(${o.id})">Complete</button>`:`<button class="btn small" onclick="reactivateOrder(${o.id})">Reactivate</button>`}</p>`).join('')).join('')||'<p class="mut">No orders for this patient.</p>'}</div>`}
+b.innerHTML=h;if(['notes','results','lda','charges'].includes(act))fillAct2(b)}
+function saveVitals(){const p=P();p.vitals={HR:$('#vHR').value.trim()||p.vitals.HR,BP:$('#vBP').value.trim()||p.vitals.BP,RR:$('#vRR').value.trim()||p.vitals.RR,SpO2:$('#vSpO2').value.trim()||p.vitals.SpO2,Temp:$('#vTemp').value.trim()||p.vitals.Temp};save();render();setStatus('Vitals saved for '+p.name)}
+function fileFlow(){const v=$('#fVal').value.trim();if(!v){alert('Chart at least one value — blank flowsheet filing is blocked.');return}S.flows.push({id:Date.now(),pid:cur,group:$('#fGroup').value,val:v,when:nowStr()});save();noteTask('flow');render();setStatus('Flowsheet column filed')}
+function delFlow(id){S.flows=S.flows.filter(x=>x.id!==id);save();render()}
+function giveMar(id){const m=S.mar.find(x=>x.id===id);if(!m||m.status!=='Due')return;m.status='Given';save();noteTask('mar');render();setStatus('MAR given: '+m.med)}
+function resetMar(id){const m=S.mar.find(x=>x.id===id);if(!m)return;m.status='Due';save();render()}
+function completeOrder(id){const o=S.orders.find(x=>x.id===id);if(!o||o.status!=='Active')return;o.status='Complete';save();noteTask('order');render()}
+function reactivateOrder(id){const o=S.orders.find(x=>x.id===id);if(!o)return;o.status='Active';save();render()}
+</script>
+<script>
+function fillAct2(b){const p=P();let h='';
+if(act==='notes'){const ed=editNoteId?S.notes.find(n=>n.id===editNoteId&&n.pid===cur&&n.status==='Draft'):null;h=`<div class="card"><h3>Notes — draft → sign (signed notes are locked)</h3><label>Title</label><input id="nTitle" value="${ed?esc(ed.title):'RT Progress Note'}"><label>Body — type a dot phrase (e.g. .ventcheck) followed by a space to expand it. @NAME@, @DEVICE@ and other tokens fill from this chart.</label><textarea id="nBody" oninput="expandPhrase(this)">${ed?esc(ed.body):''}</textarea><div class="linkrow"><span class="mut">SmartLinks — click to insert:</span>${SMARTLINKS.map((l,i)=>`<select id="sl${i}" style="width:auto;margin:0">${l.options.map(o=>`<option>${esc(o)}</option>`).join('')}</select><button class="btn small" onclick="insertLink(${i})">${esc(l.name)}</button>`).join('')}</div><p><button class="btn" onclick="saveNote('Draft')">${ed?'Save changes to draft':'Save draft'}</button> <button class="btn primary" onclick="saveNote('Signed')">Save &amp; Sign</button> ${ed?`<button class="btn ghost" onclick="editNoteId=null;render()">Cancel edit</button>`:''} ${timeThisBtn('Chart audit')}</p><p class="mut">Signing saves what is in the editor first. Signed notes cannot be edited, re-signed or deleted — corrections go in an addendum.</p>${S.notes.filter(n=>n.pid===cur).slice().reverse().map(n=>`<div class="card"><b>${esc(n.title)}</b> — ${esc(n.status)}<p>${esc(n.body)}</p>${n.status==='Draft'?`<button class="btn small" onclick="editNote(${n.id})">Edit</button> <button class="btn small primary" onclick="signNote(${n.id})">Sign</button> <button class="btn small" onclick="delNote(${n.id})">Delete</button>`:`<span class="ok">🔒 Signed — locked</span> <button class="btn small" onclick="addendum(${n.id})">Add addendum</button>`}</div>`).join('')||'<p class="mut">No notes yet for this patient.</p>'}</div>`}
+if(act==='results'){h=`<div class="card"><h3>Results — seed gas + filed results</h3><p><b>${esc(p.abg.type)} gas:</b> pH ${p.abg.pH}, PaCO₂ ${p.abg.PaCO2}, HCO₃ ${p.abg.HCO3}, PaO₂ ${p.abg.PaO2}, SaO₂ ${p.abg.SaO2}%</p><p>${abgRead(p.abg)}</p><h4>File a result (each panel files only its own analytes)</h4><label>Panel</label><select id="rPanel" onchange="panelFields()">${Object.keys(PANELS).map(k=>`<option>${k}</option>`).join('')}</select><div id="rFields"></div><button class="btn primary" onclick="fileResult()">File result</button> ${timeThisBtn('ABG draw')}${S.results.filter(r=>r.pid===cur).slice().reverse().map(r=>`<p><b>${esc(r.panel)}</b>: ${esc(r.vals)} <span class="mut">${esc(r.when)}</span></p>`).join('')}</div>`}
+if(act==='lda'){const removed=(S.ldaRemoved&&S.ldaRemoved[cur])||[];h=`<div class="card"><h3>LDA — Lines / Drains / Airways</h3>${p.lda.map((l,i)=>`<p>• ${esc(l)} <button class="btn small" onclick="removeLda(${i})">Remove</button></p>`).join('')||'<p class="mut">No active LDAs.</p>'}${removed.length?`<h4>Removed — can be reactivated</h4>${removed.map((l,i)=>`<p class="mut">• ${esc(l)} <button class="btn small" onclick="reactivateLda(${i})">Reactivate</button></p>`).join('')}`:''}<label>Add LDA</label><input id="ldaNew" placeholder="e.g. ETT 7.5 @ 22 cm"><button class="btn primary" onclick="addLda()">Add</button></div>`}
+if(act==='charges'){h=`<div class="card"><h3>Charge Capture — CPT catalog</h3>${CPTS.map(c=>`<p><b>${c[0]}</b> — ${esc(c[1])} <button class="btn small primary" onclick="addCharge('${c[0]}')">Capture</button></p>`).join('')}<h4>Captured for this patient</h4>${S.charges.filter(c=>c.pid===cur).slice().reverse().map(c=>`<p>${esc(c.code)} <span class="mut">${esc(c.when)}</span></p>`).join('')||'<p class="mut">None yet.</p>'}</div>`}
+b.innerHTML=h;if(act==='results')panelFields()}
+function insertLink(i){const sel=$('#sl'+i),ta=$('#nBody');if(!sel||!ta)return;const txt=SMARTLINKS[i].name+': '+sel.value+'. ';const s=ta.selectionStart||ta.value.length;ta.value=ta.value.slice(0,s)+txt+ta.value.slice(s);ta.focus()}
+function expandPhrase(el){const all=allPhrases();for(const k of Object.keys(all)){const needle=k+' ';if(el.value.includes(needle)){el.value=el.value.split(needle).join(fillTokens(all[k])+' ');return}}}
+function saveNote(st){const body=($('#nBody').value||'').trim();if(!body){alert('Write the note first — blank notes are blocked.');return}const title=($('#nTitle').value||'').trim()||'RT Note';if(editNoteId){const n=S.notes.find(x=>x.id===editNoteId);if(n&&n.status==='Signed'){alert('Signed notes are locked — corrections go in an addendum');editNoteId=null;render();return}if(n){n.title=title;n.body=body;n.status=st;if(st==='Signed'){editNoteId=null;save();noteTask('note');render();setStatus('Note saved & signed');return}editNoteId=null;save();render();setStatus('Draft saved');return}}S.notes.push({id:Date.now(),pid:cur,title,body,status:st});save();if(st==='Signed')noteTask('note');render();setStatus(st==='Signed'?'Note saved & signed':'Draft saved')}
+function editNote(id){const n=S.notes.find(x=>x.id===id);if(!n)return;if(n.status==='Signed'){alert('Signed notes are locked — corrections go in an addendum');return}editNoteId=id;render();scrollToId('actsec-notes');setStatus('Editing draft — Sign will save these edits first')}
+function signNote(id){const n=S.notes.find(x=>x.id===id);if(!n)return;if(n.status==='Signed'){alert('Note is already signed');return}if(editNoteId===id){saveNote('Signed');return}n.status='Signed';save();noteTask('note');render();setStatus('Note signed')}
+function delNote(id){const n=S.notes.find(x=>x.id===id);if(!n)return;if(n.status==='Signed'){alert('Signed notes are locked — corrections go in an addendum');return}S.notes=S.notes.filter(x=>x.id!==id);if(editNoteId===id)editNoteId=null;save();render()}
+function addendum(id){const txt=prompt('Addendum text (creates a new signed addendum note)');if(!txt||!txt.trim())return;S.notes.push({id:Date.now(),pid:cur,title:'Addendum',body:txt.trim(),status:'Signed'});save();noteTask('note');render()}
+function panelFields(){const sel=$('#rPanel'),wrap=$('#rFields');if(!sel||!wrap)return;if(!PANELS[sel.value])sel.value=Object.keys(PANELS)[0];wrap.innerHTML=PANELS[sel.value].map(f=>`<label>${f}</label><input data-rf="${f}">`).join('')}
+function fileResult(){const vals=$$('[data-rf]').filter(i=>i.value.trim()).map(i=>i.dataset.rf+' '+i.value.trim()).join(', ');if(!vals){alert('Enter at least one value — blank result filing is blocked.');return}S.results.push({id:Date.now(),pid:cur,panel:$('#rPanel').value,vals,when:nowStr()});save();noteTask('result');render();setStatus('Result filed')}
+function removeLda(i){const p=P();const removedItem=p.lda.splice(i,1)[0];if(removedItem!==undefined){if(!S.ldaRemoved)S.ldaRemoved={};if(!S.ldaRemoved[cur])S.ldaRemoved[cur]=[];S.ldaRemoved[cur].push(removedItem)}save();render()}
+function reactivateLda(i){const list=(S.ldaRemoved&&S.ldaRemoved[cur])||[];const item=list.splice(i,1)[0];if(item!==undefined)P().lda.push(item);save();render()}
+function addLda(){const v=($('#ldaNew').value||'').trim();if(!v)return;P().lda.push(v);save();render()}
+function addCharge(code){S.charges.push({pid:cur,code,when:nowStr()});save();noteTask('charge');render();setStatus('Charge captured: '+code)}
+</script>
+<script>
+function viewInb(){const folders=["Results","Orders","Cosign","Patient Calls","Staff"];let h=`<div class="card"><h2>In Basket</h2><p class="mut">${unread()} unread of ${S.inb.length} messages.</p>`;folders.forEach(f=>{const ms=S.inb.filter(m=>m.folder===f);if(!ms.length)return;h+=`<h4>${esc(f)} (${ms.filter(m=>!m.read).length} unread)</h4>`+ms.map(m=>`<p class="${m.read?'':'msg-unread'}">${m.read?'':'<span class="dot">● </span>'}<span class="tag">${esc(m.folder)}</span> ${esc(m.subject)} ${m.read?'':`<button class="btn small" onclick="markRead(${m.id})">Mark read</button>`} <button class="btn small" onclick="replyMsg(${m.id})">Reply</button></p>`).join('')});return h+'</div>'}
+function markRead(id){const m=S.inb.find(x=>x.id===id);if(m)m.read=true;save();render()}
+function replyMsg(id){const m=S.inb.find(x=>x.id===id);if(m)m.read=true;save();render();alert('Reply sent (practice): Acknowledged — RT will follow up.')}
+function viewSmart(){const all=allPhrases();const custom=Object.keys(S.extraPhrases||{});let h=`<div class="card"><h2>SmartTools</h2><p class="mut">17 built-in RT dot phrases${custom.length?' + '+custom.length+' of your own':''}. Type a phrase followed by a space inside a Note to expand it. *** = wildcard to complete. Tokens @NAME@ @MRN@ @AGE@ @UNIT@ @ROOM@ @DX@ @DEVICE@ fill from the open chart.</p>`;Object.keys(all).forEach(k=>{h+=`<details class="phrase" open><summary>${esc(k)}${custom.includes(k)?' — yours':''}</summary><p>${esc(all[k])}</p>${custom.includes(k)?`<button class="btn small" onclick="delPhrase('${esc(k)}')">Delete my phrase</button>`:''}</details>`});h+=`<h3>SmartLinks — pick-lists (also in the Notes editor)</h3>${SMARTLINKS.map(l=>`<p><b>${esc(l.name)}</b> <span class="mut">${esc(l.key)}</span><br>${l.options.map(o=>`<span class="tag">${esc(o)}</span>`).join('')}</p>`).join('')}<h3>Add your own phrase</h3><label>Key (start with a dot)</label><input id="spKey" placeholder=".myphrase"><label>Text — use *** wildcards and @TOKEN@ tokens</label><textarea id="spVal" placeholder="Phrase text"></textarea><button class="btn primary" onclick="savePhrase()">Save phrase</button></div>`;return h}
+function savePhrase(){let k=($('#spKey').value||'').trim();const v=($('#spVal').value||'').trim();if(!k||!v){alert('Add both a key and phrase text.');return}if(!k.startsWith('.'))k='.'+k;if(PHRASES[k]){alert('That key is a built-in phrase — pick a different key.');return}S.extraPhrases[k]=v;save();render();setStatus('Phrase saved: '+k)}
+function delPhrase(k){delete S.extraPhrases[k];save();render()}
+const CARE_TIPS={1:"Delgado: chart the vent check first, then reassess breath sounds and SpO₂ after any setting change.",2:"Okafor: pair every neb with pre/post HR and breath sounds, and finish the MDI + spacer teach-back.",3:"Lindqvist: coach incentive spirometry hourly while awake and document the volume achieved, not just 'done'.",4:"Reyes: chart the high-flow device column — flow, FiO₂ and SpO₂ response — every check.",5:"Kowalski: lung-protective settings — verify plateau and driving pressure on every vent check; P/F 82 is severe ARDS.",6:"Chen: never trust the pulse-ox number alone — COHb 24% needs co-oximetry and 100% O₂.",7:"Novak: airway clearance before aerosolized therapy, and chart secretion amount and color.",8:"Haddad: trend VC / NIF / MEP together — the 20/30/40 rule only works as a series.",9:"Fitzgerald: BiPAP fit and leak first, then SpO₂ and work of breathing after 15–30 minutes.",10:"Brooks: LTOT decision rests on the resting room-air gas — PaO₂ 54 qualifies (≤55).",11:"Petrov: chest tube stays below chest level and is never clamped without an order.",12:"Silva: a rising PaCO₂ means she is tiring — escalate early and keep the continuous neb running.",13:"Noah: beractant 168 mg (6.7 mL) at 100 mg/kg is due 15:00 — verify weight and dose before giving."};
+function aiFindings(){const p=P();const due=S.mar.filter(m=>m.status==='Due');const unsigned=S.notes.filter(n=>n.status==='Draft');const never=S.patients.filter(x=>!S.flows.some(f=>f.pid===x.id));const staleVent=p.id===1&&!S.flows.some(f=>f.pid===1&&f.group==='Ventilator');const pendVent=S.patients.filter(x=>/ventilator/i.test(x.device)&&!S.charges.some(c=>c.pid===x.id&&c.code==='94003'));const pendNeb=S.patients.filter(x=>/neb/i.test(x.device)&&!S.charges.some(c=>c.pid===x.id&&c.code==='94640'));const rec=[];if(staleVent)rec.push({t:'Start with Delgado (ICU-4): her vent check is stale — file a Ventilator flowsheet column now.',pid:1,a:'flow'});if(due.length)rec.push({t:'Give due MAR next: '+due.slice(0,3).map(m=>m.med+' @ '+m.time+' ('+(S.patients.find(x=>x.id===m.pid)||{}).name+')').join('; ')+'.',pid:due[0].pid,a:'mar'});if(unread())rec.push({t:'Clear In Basket: '+unread()+' unread — Results and Cosign folders first.',pid:null,a:null});if(unsigned.length)rec.push({t:'Sign or finish '+unsigned.length+' draft note(s) — unsigned drafts are the #1 chart-hygiene miss.',pid:unsigned[0].pid,a:'notes'});if(never.length)rec.push({t:'No flowsheet column yet for: '+never.slice(0,4).map(x=>x.name).join(', ')+' — chart a device column for one of them.',pid:never[0].id,a:'flow'});if(pendVent.length)rec.push({t:'Pending charge: '+pendVent[0].name+' is ventilated with no 94003 captured yet.',pid:pendVent[0].id,a:'charges'});else if(pendNeb.length)rec.push({t:'Pending charge: '+pendNeb[0].name+' has nebulizer therapy with no 94640 captured yet.',pid:pendNeb[0].id,a:'charges'});if(!S.runs.length)rec.push({t:'Run your first timed challenge — Kowalski ARDS (5 min) from Patient Lists.',pid:null,a:null});return{staleVent,due,unsigned,never,rec}}
+function viewAI(){const f=aiFindings();const p=P();const tp=totalPts();const lv=level(tp);const best=S.runs.slice().sort((a,b)=>b.pts-a.pts)[0];const well=[];if(S.notes.filter(n=>n.status==='Signed').length)well.push(S.notes.filter(n=>n.status==='Signed').length+' signed note(s) on file');if(S.flows.length)well.push(S.flows.length+' flowsheet column(s) filed');if(S.mar.filter(m=>m.status==='Given').length)well.push(S.mar.filter(m=>m.status==='Given').length+' MAR dose(s) given');if(S.runs.length)well.push(S.runs.length+' challenge run(s) — best '+(best?best.pts+' pts '+best.medal:''));if(S.drills.length)well.push(S.drills.length+' drill(s) timed');const headline=f.staleVent?'Headline: Delgado\u2019s vent check is stale — start there.':(f.due.length?'Headline: '+f.due.length+' MAR dose(s) are due — clear those first.':'Headline: charting is tidy — push a timed challenge next.');
+let h=`<div class="card" style="border:2px solid var(--purple)"><h2>✦ AI AGENT</h2><p class="mut">Briefing built from your real practice record on this device — due MAR, unsigned drafts, unread In Basket, pending charges, flowsheets, challenge scores and drill times.</p><h3>${esc(headline)}</h3><p><b>Open chart:</b> ${esc(p.name)} — ${esc(p.dx)} • Level: ${lv.cur[0]} (${tp} pts)</p><h4>Prioritized recommendations — excel in charting</h4>`;h+=f.rec.length?`<ol>${f.rec.map(r=>`<li>${esc(r.t)} ${r.pid?`<button class="btn small primary" onclick="jumpTo(${r.pid},'${r.a}')">Open the chart</button>`:''} ${!r.pid&&r.t.includes('In Basket')?`<button class="btn small primary" onclick="setWs('inbasket')">Open In Basket</button>`:''} ${!r.pid&&r.t.includes('challenge')?`<button class="btn small primary" onclick="setWs('lists')">Open Challenge Board</button>`:''}</li>`).join('')}</ol>`:'<p class="ok">Nothing outstanding — every queue is clear.</p>';
+h+=`<h4>Give this patient the best service</h4><ul><li>${esc(CARE_TIPS[p.id]||'Reassess after every intervention and chart the response.')}</li><li>Chart at the time of care, not from memory at shift end.</li><li>Close the loop: every due med given, every result read, every draft signed.</li><li>Reassess after every intervention and chart the response (breath sounds, SpO₂, HR).</li></ul><h4>Doing well</h4><p>${well.length?esc(well.join(' • ')):'Nothing charted yet — your first flowsheet column starts the record.'}</p><p><b>Next move:</b> ${f.rec.length?esc(f.rec[0].t):'Start the Kowalski ARDS challenge.'}</p><p>${f.rec.length&&f.rec[0].pid?`<button class="btn primary" onclick="jumpTo(${f.rec[0].pid},'${f.rec[0].a}')">Next move: Open the chart →</button> `:''}<button class="btn" onclick="render()">Re-run briefing</button></p></div>`;return h}
+</script>
+<script>
+"use strict";
+/* ===== LIVE BEDSIDE MONITOR — baselines derived from the open patient's own chart ===== */
+let MON=null, monAudio=null;
+function numOr(v,d){const n=parseFloat(v);return isNaN(n)?d:n}
+function monBaseFor(p){
+  const hr=numOr(p.vitals&&p.vitals.HR,82), rr=numOr(p.vitals&&p.vitals.RR,18),
+        spo2=numOr(p.vitals&&p.vitals.SpO2,96), temp=numOr(p.vitals&&p.vitals.Temp,37.0);
+  const bpm=/(\d+)\s*\/\s*(\d+)/.exec(String((p.vitals&&p.vitals.BP)||''));
+  const sys=bpm?+bpm[1]:118, dia=bpm?+bpm[2]:72;
+  const dev=String(p.device||''), lda=(p.lda||[]).join(' ');
+  const vent=/ventilator/i.test(dev), bipap=/bipap/i.test(dev), cpap=/cpap/i.test(dev);
+  const art=/arterial line/i.test(lda);
+  let fio2=null; const fm=/FiO.\s*([0-9]*\.?[0-9]+)/i.exec(dev); if(fm)fio2=parseFloat(fm[1]);
+  if(p.id===5)fio2=1.00; if(p.id===6)fio2=1.00;
+  const etco2=(vent||bipap||cpap)?Math.max(18,Math.round(numOr(p.abg&&p.abg.PaCO2,40)-(p.id===5?8:5))):null;
+  const neo=p.age===0;
+  let tgtLo=92,tgtHi=96; if(p.id===1||p.id===10){tgtLo=88;tgtHi=92} if(p.id===5){tgtLo=88;tgtHi=95} if(neo){tgtLo=90;tgtHi=95}
+  const lim={
+    HR:[neo?100:50, neo?170:(hr>110?130:120)],
+    RR:[neo?30:8, neo?70:(rr>=28?36:30)],
+    SpO2:[neo?88:(tgtLo-3),100],
+    SYS:[neo?45:90, neo?100:(sys>150?185:180)],
+    EtCO2:etco2?[Math.max(15,etco2-15),etco2+10]:null
+  };
+  return {HR:hr,RR:rr,SpO2:spo2,Temp:temp,SYS:sys,DIA:dia,MAP:Math.round(dia+(sys-dia)/3),
+          vent,bipap,cpap,art,fio2,etco2,neo,tgtLo,tgtHi,lim,
+          peep:(/PEEP\s*(\d+)/i.exec(dev)||[])[1]||null};
+}
+function monReset(pid){
+  const p=S.patients.find(x=>x.id===pid)||S.patients[0]; const b=monBaseFor(p);
+  MON={pid:p.id,base:b,cur:{HR:b.HR,RR:b.RR,SpO2:b.SpO2,Temp:b.Temp,SYS:b.SYS,DIA:b.DIA,EtCO2:b.etco2},disp:null,evt:null,
+       hist:[],silencedUntil:0,ack:{},sound:false,lastBeat:0,
+       nibp:{sys:b.SYS,dia:b.DIA,map:b.MAP,next:Date.now()+40000,inflUntil:0,doneAt:Date.now()}};
+}
+function monFmt(n,d){return (d===0)?String(Math.round(n)):n.toFixed(d)}
+function monitorHtml(p){
+  if(!MON||MON.pid!==p.id)monReset(p.id);
+  const b=MON.base,c=MON.cur;
+  const bpTxt=b.art?Math.round(c.SYS)+'/'+Math.round(c.DIA):MON.nibp.sys+'/'+MON.nibp.dia;
+  const bpLab=b.art?'ART — continuous arterial line':'NIBP — cycling cuff';
+  const tile=(cls,lab,id,val,unit,lim)=>`<div class="mtile" id="tile-${id}"><div class="mlab ${cls}">${lab}</div><div class="mv ${cls}" id="mon-${id}">${val}</div><div class="mun">${unit}</div><div class="mlim">Alarm ${lim}</div></div>`;
+  let h=`<div class="mon" id="monRoot"><div class="monhead"><span><span class="livedot"></span> <b>LIVE BEDSIDE MONITOR</b> — ${esc(p.name)} • ${esc(p.room)} • ${esc(p.unit)}</span><span class="monmeta">${esc(p.device)}${b.fio2?' • FiO₂ '+b.fio2.toFixed(2):''}${b.peep?' • PEEP '+b.peep:''} • <span id="monClock">${new Date().toLocaleTimeString()}</span></span></div>`;
+  h+=`<div class="monbanner okb show" id="monAlarm">✓ All monitored parameters within alarm limits</div>`;
+  h+=`<canvas class="wave" id="monWave" width="920" height="248"></canvas>`;
+  h+=`<div class="montiles">`;
+  h+=tile('cHR','ECG — Heart Rate','HR',Math.round(c.HR),'bpm',b.lim.HR[0]+' – '+b.lim.HR[1]);
+  h+=tile('cSpO2',p.id===6?'SpO₂ — pulse ox ⚠ see note':'SpO₂ — pulse oximetry','SpO2',Math.round(c.SpO2),'% • target '+b.tgtLo+'–'+b.tgtHi+'%','low '+b.lim.SpO2[0]);
+  h+=tile('cRR','RESP — Resp Rate','RR',Math.round(c.RR),'breaths/min',b.lim.RR[0]+' – '+b.lim.RR[1]);
+  h+=tile('cBP',bpLab,'BP',bpTxt,(b.art?'mmHg • MAP ':'mmHg • MAP ')+'<span id="mon-MAP">'+(b.art?Math.round(c.DIA+(c.SYS-c.DIA)/3):MON.nibp.map)+'</span>',b.lim.SYS[0]+' – '+b.lim.SYS[1]+' sys');
+  h+=tile('cTemp','TEMP','Temp',c.Temp.toFixed(1),'°C','—');
+  h+=b.etco2?tile('cEtCO2','EtCO₂ — capnography','EtCO2',Math.round(c.EtCO2),'mmHg • PaCO₂ '+p.abg.PaCO2+' on gas',b.lim.EtCO2[0]+' – '+b.lim.EtCO2[1]):`<div class="mtile"><div class="mlab cEtCO2">EtCO₂ — capnography</div><div class="mv" style="color:#5a6d7f">—</div><div class="mun">No capnography on this device</div><div class="mlim">Vent / BiPAP / CPAP patients only</div></div>`;
+  h+=`</div>`;
+  h+=`<div class="monmeta" id="monCycle">${b.art?'Arterial line transduced continuously — BP updates with every beat.':'NIBP cuff cycles automatically (training cycle ≈ 45 s). Next cycle: <b id="monNibpIn">—</b>'}</div>`;
+  h+=`<div class="monbtns"><button class="btn primary" onclick="captureVitals()">📥 Capture vitals to Flowsheets</button><button class="btn warnb2" onclick="monSilence()">🔕 Silence alarms (2 min)</button><button class="btn" onclick="monAck()">✓ Acknowledge alarms</button><button class="btn" id="monSoundBtn" onclick="monSound()">🔇 QRS sound: OFF</button></div>`;
+  h+=`<div class="monmeta">Trend — this session (HR green • SpO₂ cyan) &nbsp;<span id="monTrendTxt"></span></div><canvas class="trend" id="monTrend" width="920" height="92"></canvas>`;
+  if(p.id===6)h+=`<div class="trapnote">⚠ <b>Pulse-oximetry trap — Chen:</b> the monitor reads SpO₂ 99% because a standard two-wavelength oximeter cannot tell carboxyhemoglobin from oxyhemoglobin. COHb is <b>24%</b> — trust the co-oximetry, keep FiO₂ 1.00, and never chart the 99% as reassurance.</div>`;
+  if(p.id===5)h+=`<div class="trapnote">⚠ <b>Kowalski — severe ARDS:</b> SpO₂ ${Math.round(b.SpO2)}% on FiO₂ 1.00 with PEEP ${b.peep||14} is the charted picture (P/F 82). The monitor mean-reverts to those baselines — a low-80s/high-80s saturation here is the patient, not a probe error. Check plateau &amp; driving pressure on every vent check.</div>`;
+  if(b.neo)h+=`<div class="trapnote">⚠ <b>Neonatal ranges — Andersen:</b> HR, RR and BP baselines are newborn values (HR ${Math.round(b.HR)}, RR ${Math.round(b.RR)}, BP ${Math.round(b.SYS)}/${Math.round(b.DIA)} on bubble CPAP). Adult alarm limits would be wrong for this patient — limits above are age-set.</div>`;
+  h+=`</div>`;
+  h+=`<div class="card"><h3>How this monitor ties into the chart</h3><p>Numbers drift in real time around <b>this patient's own seeded vitals</b> — the same values on the Storyboard and the seed blood gas. Waveforms are rate-matched: ECG and pleth run at the charted heart rate, the respiratory trace at the charted rate${b.art?', and the red arterial trace exists because this patient has an arterial line on the LDA activity':''}.</p><p><b>Capture vitals to Flowsheets</b> files the monitor's current numbers as a new Vital Signs flowsheet column <i>and</i> refreshes the Storyboard snapshot — exactly how device data lands in a real Epic chart. Capturing also counts as the flowsheet step in a timed challenge for this patient.</p><p>Occasional brief events — a cough, a mucus plug, extra effort — push one value across its alarm limit: the tile and banner flash red. <b>Silence</b> mutes alarms for 2 minutes; <b>Acknowledge</b> latches that alarm off until the value returns to range and re-arms.</p><p class="mut">Training simulation: values are generated on this device for practice and are not connected to any real monitor or patient.</p><p>${timeThisBtn('Vent check')} ${timeThisBtn('O₂ setup')}</p></div>`;
+  return h;
+}
+function monDrift(key,noise,lo,hi,pull){const c=MON.cur,b=MON.base;c[key]+=(b[key]-c[key])*(pull||0.06)+(Math.random()-0.5)*2*noise;if(c[key]<lo)c[key]=lo;if(c[key]>hi)c[key]=hi}
+function monBreaches(){
+  if(!MON)return[];const c=MON.disp||MON.cur,L=MON.base.lim,out=[];
+  const chk=(k,v,lo,hi,lab)=>{if(v<lo)out.push({k,msg:'*** '+lab+' '+Math.round(v)+' — BELOW low alarm '+lo});else if(v>hi)out.push({k,msg:'*** '+lab+' '+Math.round(v)+' — ABOVE high alarm '+hi})};
+  chk('HR',c.HR,L.HR[0],L.HR[1],'HR'); chk('RR',c.RR,L.RR[0],L.RR[1],'RR'); chk('SYS',c.SYS,L.SYS[0],L.SYS[1],'Systolic');
+  if(c.SpO2<L.SpO2[0])out.push({k:'SpO2',msg:'*** SpO₂ '+Math.round(c.SpO2)+'% — BELOW low alarm '+L.SpO2[0]+'%'});
+  if(c.EtCO2&&L.EtCO2&&(c.EtCO2<L.EtCO2[0]||c.EtCO2>L.EtCO2[1]))out.push({k:'EtCO2',msg:'*** EtCO₂ '+Math.round(c.EtCO2)+' — OUTSIDE alarm '+L.EtCO2[0]+'–'+L.EtCO2[1]});
+  return out.filter(x=>!MON.ack[x.k]);
+}
+function monTick(){
+  const p=P(); if(!p)return;
+  if(!MON||MON.pid!==p.id){if(document.querySelector('#monRoot')){/* render will rebuild */} monReset(p.id);}
+  const b=MON.base,c=MON.cur,now=Date.now();
+  monDrift('HR',b.neo?3:1.7,b.HR-(b.neo?22:11),b.HR+(b.neo?22:11));
+  monDrift('RR',b.neo?2.4:1.3,b.RR-(b.neo?14:7),b.RR+(b.neo?14:7));
+  monDrift('SpO2',0.55,Math.max(68,b.SpO2-3),Math.min(100,b.SpO2+2),0.09); c.SpO2=Math.round(c.SpO2*2)/2;
+  monDrift('Temp',0.015,b.Temp-0.25,b.Temp+0.25,0.03);
+  monDrift('SYS',b.neo?1.6:3.2,b.SYS-(b.neo?9:13),b.SYS+(b.neo?9:13));
+  monDrift('DIA',b.neo?1.2:2.2,b.DIA-9,b.DIA+9);
+  if(c.EtCO2)monDrift('EtCO2',0.8,b.etco2-4,b.etco2+4);
+  /* NIBP cycling for patients without an arterial line */
+  if(!b.art){const n=MON.nibp;
+    if(n.inflUntil&&now>=n.inflUntil){n.inflUntil=0;n.sys=Math.round(c.SYS);n.dia=Math.round(c.DIA);n.map=Math.round(n.dia+(n.sys-n.dia)/3);n.doneAt=now;n.next=now+45000}
+    else if(!n.inflUntil&&now>=n.next){n.inflUntil=now+4000}
+  }
+  /* transient clinical events — a cough / plug / effort briefly moves one parameter, then it recovers */
+  if(MON.evt&&now>MON.evt.until)MON.evt=null;
+  if(!MON.evt&&Math.random()<0.022){const evs=[['SpO2',-5],['HR',b.neo?18:15],['RR',b.neo?9:7]];const e=evs[Math.floor(Math.random()*evs.length)];
+    MON.evt={key:e[0],off:e[1],until:now+7000+Math.random()*6000,setAt:now}}
+  const disp=Object.assign({},c);
+  if(MON.evt){const age=(now-MON.evt.setAt)/1000;const ramp=Math.min(1,age/2.5);const left=(MON.evt.until-now)/1000;const fade=Math.min(1,left/2.5);
+    disp[MON.evt.key]+=MON.evt.off*Math.max(0,Math.min(ramp,fade))}
+  disp.SpO2=Math.max(60,Math.min(100,disp.SpO2)); MON.disp=disp;
+  MON.hist.push({t:now,HR:disp.HR,SpO2:disp.SpO2}); if(MON.hist.length>300)MON.hist.shift();
+  /* clear acks for parameters back in range */
+  const raw=(()=>{const keep={};monBreachesRaw().forEach(x=>keep[x.k]=1);Object.keys(MON.ack).forEach(k=>{if(!keep[k])delete MON.ack[k]});return keep})();
+  monPaint(now); drawTrend();
+}
+function monBreachesRaw(){const save=MON.ack;MON.ack={};const r=monBreaches();MON.ack=save;return r}
+function setTxt(id,v){const e=document.querySelector('#'+id);if(e)e.textContent=v}
+function monPaint(now){
+  if(!document.querySelector('#monRoot'))return; const b=MON.base,c=MON.disp||MON.cur;
+  setTxt('mon-HR',String(Math.round(c.HR))); setTxt('mon-RR',String(Math.round(c.RR)));
+  setTxt('mon-SpO2',String(Math.round(c.SpO2))); setTxt('mon-Temp',c.Temp.toFixed(1));
+  if(c.EtCO2)setTxt('mon-EtCO2',String(Math.round(c.EtCO2)));
+  setTxt('monClock',new Date().toLocaleTimeString());
+  if(b.art){setTxt('mon-BP',Math.round(c.SYS)+'/'+Math.round(c.DIA));setTxt('mon-MAP',String(Math.round(c.DIA+(c.SYS-c.DIA)/3)))}
+  else{const n=MON.nibp;
+    if(n.inflUntil){setTxt('mon-BP','··· / ···');setTxt('monNibpIn','CUFF INFLATING — hold still…')}
+    else{setTxt('mon-BP',n.sys+'/'+n.dia);setTxt('mon-MAP',String(n.map));setTxt('monNibpIn',Math.max(0,Math.ceil((n.next-now)/1000))+' s (last reading '+new Date(n.doneAt).toLocaleTimeString()+')')}
+  }
+  const br=monBreaches(), sil=now<MON.silencedUntil, ban=document.querySelector('#monAlarm');
+  ['HR','SpO2','RR','BP','EtCO2'].forEach(k=>{const t=document.querySelector('#tile-'+k);if(t)t.classList.remove('alarm')});
+  if(ban){ if(sil){ban.className='monbanner warnb show';ban.textContent='🔕 ALARMS SILENCED — '+Math.ceil((MON.silencedUntil-now)/1000)+' s remaining'+(br.length?' • Still out of limits: '+br.map(x=>x.k).join(', '):'')}
+    else if(br.length){ban.className='monbanner crit show';ban.textContent='🚨 '+br.map(x=>x.msg).join('   •   ');
+      br.forEach(x=>{const t=document.querySelector('#tile-'+(x.k==='SYS'?'BP':x.k));if(t)t.classList.add('alarm')})}
+    else{ban.className='monbanner okb show';ban.textContent='✓ All monitored parameters within alarm limits'}}
+  const sb=document.querySelector('#monSoundBtn'); if(sb)sb.textContent=MON.sound?'🔊 QRS sound: ON':'🔇 QRS sound: OFF';
+  if(MON.hist.length>1){const hs=MON.hist.map(x=>x.HR),ss=MON.hist.map(x=>x.SpO2);
+    setTxt('monTrendTxt','• HR '+Math.round(Math.min(...hs))+'–'+Math.round(Math.max(...hs))+' • SpO₂ '+Math.round(Math.min(...ss))+'–'+Math.round(Math.max(...ss))+'% • '+MON.hist.length+' samples')}
+}
+function monSilence(){if(!MON)monReset(P().id);MON.silencedUntil=Date.now()+120000;monPaint(Date.now());setStatus('Monitor alarms silenced for 2 minutes')}
+function monAck(){if(!MON)monReset(P().id);monBreachesRaw().forEach(x=>MON.ack[x.k]=1);monPaint(Date.now());setStatus('Monitor alarms acknowledged — they re-arm when the value returns to range')}
+function monSound(){if(!MON)monReset(P().id);MON.sound=!MON.sound;
+  if(MON.sound&&!monAudio){try{monAudio=new (window.AudioContext||window.webkitAudioContext)()}catch(e){monAudio=null}}
+  if(monAudio&&monAudio.state==='suspended')monAudio.resume(); monPaint(Date.now())}
+function gss(x,c,w){const d=(x-c)/w;return Math.exp(-d*d)}
+function ecgVal(ph){return 0.13*gss(ph,0.12,0.035)-0.16*gss(ph,0.285,0.012)+1.0*gss(ph,0.315,0.010)-0.28*gss(ph,0.345,0.014)+0.24*gss(ph,0.56,0.055)}
+function plethVal(ph){ph=((ph%1)+1)%1;return ph<0.16?Math.pow(Math.sin(ph/0.16*Math.PI/2),1.4):Math.exp(-(ph-0.16)*3.4)*(1+0.10*gss(ph,0.34,0.05))}
+function artVal(ph){ph=((ph%1)+1)%1;return ph<0.09?(ph/0.09):Math.exp(-(ph-0.09)*4.2)+0.22*gss(ph,0.32,0.045)}
+function respVal(ph){ph=((ph%1)+1)%1;return ph<0.38?0.5-0.5*Math.cos(ph/0.38*Math.PI):Math.exp(-(ph-0.38)*3.2)}
+function capVal(ph){ph=((ph%1)+1)%1;return ph<0.10?ph/0.10:(ph<0.42?1:(ph<0.52?1-(ph-0.42)/0.10:0))}
+function drawWave(){
+  const cv=document.querySelector('#monWave'); if(!cv||!MON)return;
+  const p=P(); if(!p||p.id!==MON.pid)return;
+  const ctx=cv.getContext('2d'); if(!ctx)return; const W=cv.width,H=cv.height,now=performance.now()/1000;
+  const b=MON.base,c=MON.disp||MON.cur;
+  ctx.fillStyle='#010507';ctx.fillRect(0,0,W,H);
+  ctx.strokeStyle='rgba(70,110,90,.18)';ctx.lineWidth=1;ctx.beginPath();
+  for(let gx=0;gx<W;gx+=23){ctx.moveTo(gx,0);ctx.lineTo(gx,H)} for(let gy=0;gy<H;gy+=23){ctx.moveTo(0,gy);ctx.lineTo(W,gy)} ctx.stroke();
+  const rows=[['II  ECG',248,'#39ff6a',62,t=>ecgVal((t*c.HR/60)%1)],
+              ['SpO₂ pleth',null,'#37c8ff',54,t=>plethVal((t*c.HR/60-0.22)%1)],
+              ['RESP',null,'#ffd83d',54,t=>respVal((t*c.RR/60)%1)]];
+  if(b.art)rows.push(['ART',null,'#ff6055',54,t=>artVal((t*c.HR/60-0.26)%1)]);
+  else if(b.etco2)rows.push(['EtCO₂ capno',null,'#ff9f2e',54,t=>capVal((t*c.RR/60)%1)]);
+  const rh=H/rows.length, win=6;
+  rows.forEach((r,i)=>{const yBase=i*rh+rh*0.68, amp=rh*0.52;
+    ctx.strokeStyle=r[2];ctx.lineWidth=2;ctx.beginPath();
+    for(let x=0;x<=W;x+=2){const t=now-(W-x)/W*win;const v=r[4](t);const y=yBase-v*amp;x===0?ctx.moveTo(x,y):ctx.lineTo(x,y)}
+    ctx.stroke();ctx.fillStyle=r[2];ctx.font='bold 12px Consolas,monospace';ctx.fillText(r[0],8,i*rh+16);
+    ctx.fillStyle='rgba(160,190,205,.75)';ctx.font='11px Consolas,monospace';
+    const rv=r[0].indexOf('ECG')>0?Math.round(c.HR)+' bpm':r[0].indexOf('pleth')>0?Math.round(c.SpO2)+' %':r[0].indexOf('RESP')===0?Math.round(c.RR)+' /min':b.art?Math.round(c.SYS)+'/'+Math.round(c.DIA):Math.round(c.EtCO2||0)+' mmHg';
+    ctx.fillText(rv,W-86,i*rh+16);});
+  /* QRS beep */
+  const beat=Math.floor(now*c.HR/60);
+  if(MON.sound&&monAudio&&beat!==MON.lastBeat){MON.lastBeat=beat;try{const o=monAudio.createOscillator(),gn=monAudio.createGain();o.frequency.value=880;o.type='sine';gn.gain.setValueAtTime(0.06,monAudio.currentTime);gn.gain.exponentialRampToValueAtTime(0.001,monAudio.currentTime+0.07);o.connect(gn);gn.connect(monAudio.destination);o.start();o.stop(monAudio.currentTime+0.08)}catch(e){}}
+  else if(beat!==MON.lastBeat)MON.lastBeat=beat;
+}
+function drawTrend(){
+  const cv=document.querySelector('#monTrend'); if(!cv||!MON||MON.hist.length<2)return;
+  const ctx=cv.getContext('2d'); if(!ctx)return; const W=cv.width,H=cv.height;
+  ctx.fillStyle='#010507';ctx.fillRect(0,0,W,H);
+  ctx.strokeStyle='rgba(90,120,140,.25)';ctx.beginPath();ctx.moveTo(0,H/2);ctx.lineTo(W,H/2);ctx.stroke();
+  const plot=(key,lo,hi,col)=>{ctx.strokeStyle=col;ctx.lineWidth=1.8;ctx.beginPath();
+    MON.hist.forEach((s,i)=>{const x=i/(299)*W;const y=H-((Math.max(lo,Math.min(hi,s[key]))-lo)/(hi-lo))*(H-10)-5;i===0?ctx.moveTo(x,y):ctx.lineTo(x,y)});ctx.stroke()};
+  plot('HR',40,MON.base.neo?190:160,'#39ff6a'); plot('SpO2',70,100,'#37c8ff');
+  ctx.fillStyle='#8fa8b5';ctx.font='11px Consolas,monospace';ctx.fillText('HR scale 40–'+(MON.base.neo?190:160),8,14);ctx.fillText('SpO₂ scale 70–100',8,H-6);
+}
+function captureVitals(){
+  const p=P(); if(!MON||MON.pid!==p.id)monReset(p.id);
+  const b=MON.base,c=MON.disp||MON.cur;
+  const bp=b.art?Math.round(c.SYS)+'/'+Math.round(c.DIA):MON.nibp.sys+'/'+MON.nibp.dia;
+  const map=b.art?Math.round(c.DIA+(c.SYS-c.DIA)/3):MON.nibp.map;
+  const val='Monitor capture — HR '+Math.round(c.HR)+', BP '+bp+' (MAP '+map+', '+(b.art?'ART line':'NIBP')+'), RR '+Math.round(c.RR)+', SpO₂ '+Math.round(c.SpO2)+'%'+(b.fio2?' on FiO₂ '+b.fio2.toFixed(2):'')+', Temp '+c.Temp.toFixed(1)+'°C'+(c.EtCO2?', EtCO₂ '+Math.round(c.EtCO2):'');
+  S.flows.push({id:Date.now(),pid:cur,group:'Vital Signs',val,when:nowStr()});
+  p.vitals={HR:String(Math.round(c.HR)),BP:bp,RR:String(Math.round(c.RR)),SpO2:String(Math.round(c.SpO2)),Temp:c.Temp.toFixed(1)+'°C'};
+  save(); if(typeof noteTask==='function')noteTask('flow'); render();
+  setStatus('Monitor vitals captured to Flowsheets for '+p.name+': '+val);
+}
+setInterval(monTick,1000);
+setInterval(drawWave,50);
+
+</script>
+<script>
+function startChallenge(i){const c=CHALLENGES[i];if(CH&&!confirm('A challenge is already running — abandon it and start this one?'))return;if(CH)clearInterval(CH.iv);CH={idx:i,tasks:c.tasks.slice(),done:{},taskPts:0,qPts:0,pen:0,wrong:0,qDone:false,end:Date.now()+c.mins*60000,iv:null};cur=c.pid;act='summary';ws='chart';$$('#ws button').forEach(x=>x.classList.toggle('on',x.dataset.w==='chart'));CH.iv=setInterval(tickHud,250);render();updateHud();alert('Challenge started: '+c.name+' — '+c.mins+' minutes.\n\nTasks:\n• '+c.tasks.map(t=>TASKLABEL[t]).join('\n• ')+'\n\nThen answer the end question — it appears at the top of the page as soon as every charting step is done. Wrong picks cost 50 pts; the first attempt is the scored one.');scrollToId('ws-chart')}
+function updateHud(){const hud=$('#hud');if(!hud)return;if(!CH){hud.style.display='none';return}hud.style.display='flex';tickHudText()}
+function tickHudText(){if(!CH)return;const c=CHALLENGES[CH.idx];const left=Math.max(0,CH.end-Date.now());const s=Math.ceil(left/1000);const doneN=Object.keys(CH.done).length;const pts=Math.max(0,CH.taskPts+CH.qPts-CH.pen);$('#hud').classList.toggle('red',left<60000&&left>0);$('#hudTxt').textContent='🏆 '+c.name+' — '+Math.floor(s/60)+':'+String(s%60).padStart(2,'0')+' left • Steps '+doneN+'/'+CH.tasks.length+' charting'+(questionReady()?' • End question ready':'')+(CH.qDone?' • Question answered':'')+' • '+pts+' pts';const qb=$('#hudQBtn');if(qb)qb.style.display=questionReady()?'':'none'}
+function tickHud(){if(!CH)return;if(Date.now()>=CH.end){finishChallenge('timeout');return}tickHudText()}
+function noteTask(kind){if(!CH)return;const c=CHALLENGES[CH.idx];if(cur!==c.pid)return;if(CH.tasks.includes(kind)&&!CH.done[kind]){CH.done[kind]=1;CH.taskPts+=100;tickHudText();if(questionReady()){render();const q=$('#qCard');if(q)q.scrollIntoView({behavior:'smooth',block:'start'})}}}
+function questionCard(){const c=CHALLENGES[CH.idx];return `<div class="card qcard" id="qCard"><h3>End question — ${esc(c.name)}</h3><p><b>${esc(c.q)}</b></p>${c.opts.map((o,i)=>`<p><button class="btn" id="qopt${i}" onclick="ansQ(${i})">${esc(o)}</button></p>`).join('')}<p class="mut">Wrong picks: −50 pts each and that option locks. The question stays here at the top until you answer it — you can navigate anywhere and come back.</p></div>`}
+function jumpToQuestion(){const q=$('#qCard');if(q){q.scrollIntoView({behavior:'smooth',block:'start'});return}render();setTimeout(()=>{const q2=$('#qCard');if(q2)q2.scrollIntoView({behavior:'smooth',block:'start'})},50)}
+function ansQ(i){if(!CH||CH.qDone)return;const c=CHALLENGES[CH.idx];if(i===c.ans){CH.qDone=true;CH.qPts=150;finishChallenge('complete')}else{CH.wrong++;CH.pen+=50;const b=$('#qopt'+i);if(b){b.disabled=true;b.style.textDecoration='line-through'}tickHudText();alert('Not quite — −50 pts. First attempt is scored; pick again.')}}
+function endRunManual(){if(!CH)return;if(!confirm('End this run now? It will be recorded as ended early.'))return;finishChallenge('manual')}
+function finishChallenge(reason){if(!CH)return;const c=CHALLENGES[CH.idx];clearInterval(CH.iv);const doneN=Object.keys(CH.done).length;const timeBonus=reason==='complete'?Math.max(0,Math.round((CH.end-Date.now())/1000)):0;const total=Math.max(0,CH.taskPts+CH.qPts+timeBonus-CH.pen);const max=c.tasks.length*100+150+c.mins*60;const md=medal(total,max);const completed=reason==='complete';const run={name:c.name,pts:total,medal:md,when:nowStr(),completed};S.runs.push(run);save();const taskPts=CH.taskPts,qPts=CH.qPts,pen=CH.pen,wrong=CH.wrong,qDone=CH.qDone;CH=null;const hud=$('#hud');if(hud)hud.style.display='none';ws='chart';$('#app').innerHTML=`<div class="card"><h2>Debrief — ${esc(c.name)}</h2><p style="font-size:20px">${esc(md)} — <b>${total} pts</b> ${completed?'<span class="ok">Run completed</span>':reason==='timeout'?'<span class="bad">Time expired</span>':'<span class="mut">Ended early</span>'}</p><p><b>Points breakdown</b></p><table><tr><th>Component</th><th>Points</th></tr><tr><td>Charting tasks — ${doneN}/${c.tasks.length} done (100 each)</td><td>${taskPts}</td></tr><tr><td>End question ${qDone?'(answered)':'(not answered)'}</td><td>${qPts}</td></tr><tr><td>Time bonus (seconds left, completed runs only)</td><td>${timeBonus}</td></tr><tr><td>Penalties — ${wrong} wrong pick(s) at −50</td><td>−${pen}</td></tr><tr><td><b>Total</b></td><td><b>${total}</b></td></tr></table><p><b>Level now:</b> ${level(totalPts()).cur[0]} — ${totalPts()} pts total</p><p><b>Exam pearl:</b> ${esc(c.pearl)}</p><button class="btn primary" onclick="setWs('lists')">Back to Patient Lists &amp; Challenge Board</button></div>`;$$('#ws button').forEach(x=>x.classList.toggle('on',x.dataset.w==='chart'));$('#unreadBadge').textContent=unread()?' ('+unread()+' unread)':'';setStatus('Debrief: '+c.name+' — '+total+' pts '+md)}
+render();
+</script>
+</body></html>
